@@ -1,0 +1,49 @@
+{% extends 'cookie-consent-manager/_layouts/cp' %}
+
+{% set title = "Cookie Categories"|t('cookie-consent-manager') %}
+
+{% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
+
+{% set contextMenu %}
+    {% if craft.app.getIsMultiSite() %}
+        {% include '_elements/sitemenu' with {
+            urlFormat: cpUrl("cookie-consent-manager/categories", {site: '{handle}'}),
+        } %}
+    {% endif %}
+{% endset %}
+
+{% block actionButton %}
+    <a href="{{ url('cookie-consent-manager/categories/add') }}" class="btn submit add icon">{{ 'New category'|t('cookie-consent-manager') }}</a>
+{% endblock %}
+
+{% block content %}
+    <div id="categories-vue-admin-table"></div>
+{% endblock %}
+
+{% set tableData = [] %}
+{% for category in categories %}
+    {% set tableData = tableData|merge([{
+        id: category.id,
+        title: category.name,
+        url: cpUrl('cookie-consent-manager/categories/'~category.id),
+        status: category.enabled,
+    }]) %}
+{% endfor %}
+
+
+{% js %}
+var columns = [
+    { name: '__slot:title', title: Craft.t('cookie-consent-manager', 'Name') },
+];
+
+new Craft.VueAdminTable({
+    columns: columns,
+    container: '#categories-vue-admin-table',
+    deleteAction: 'cookie-consent-manager/categories/archive',
+    deleteConfirmationMessage: Craft.t('cookie-consent-manager', 'Are you sure you want to archive the “{name}” category?'),
+    reorderAction: 'cookie-consent-manager/categories/reorder',
+    reorderSuccessMessage: Craft.t('cookie-consent-manager', 'Categories reordered.'),
+    reorderFailMessage:    Craft.t('cookie-consent-manager', 'Couldn’t reorder Categories.'),
+    tableData: {{ tableData|json_encode|raw }}
+});
+{% endjs %}

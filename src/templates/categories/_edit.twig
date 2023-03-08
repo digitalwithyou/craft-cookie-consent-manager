@@ -1,0 +1,111 @@
+{% extends 'cookie-consent-manager/_layouts/cp' %}
+
+{% set title = category.name
+    ? "Edit Category"|t('cookie-consent-manager')
+    : "Create Category"|t('cookie-consent-manager') %}
+
+{% set fullPageForm = true %}
+
+{% import "_includes/forms" as forms %}
+
+{% set contextMenu %}
+    {% if craft.app.getIsMultiSite() %}
+        {% include '_elements/sitemenu' with {
+            urlFormat: cpUrl("cookie-consent-manager/categories/"~category.id, {site: '{handle}'}),
+        } %}
+    {% endif %}
+{% endset %}
+
+{% block content %}
+    {{ actionInput('cookie-consent-manager/categories/save') }}
+    {{ redirectInput('cookie-consent-manager/categories/') }}
+
+    {{ forms.hidden({
+        name: 'id',
+        value: category.id
+    }) }}
+
+    <div id="category-settings">
+
+        <h2>{{ 'Content'|t }}</h2>
+
+        {{ forms.textField({
+            first: true,
+            label: "Name"|t('app'),
+            instructions: "What this category will be called in the control panel and site."|t('cookie-consent-manager'),
+            id: 'name',
+            name: 'name',
+            value: category.name,
+            errors: category.getErrors('name'),
+            autofocus: true,
+            required: true,
+            translatable: craft.app.isMultiSite,
+        }) }}
+
+        {{ forms.textField({
+            label: "Description"|t('app'),
+            instructions: "How the category will be described on the site."|t('cookie-consent-manager'),
+            id: 'description',
+            name: 'description',
+            value: category.description,
+            errors: category.getErrors('description'),
+            translatable: craft.app.isMultiSite,
+        }) }}
+
+        <hr>
+
+        <h2>{{ 'Behaviour'|t }}</h2>
+
+        {{ forms.lightswitchField({
+            label: 'Required'|t('cookie-consent-manager'),
+            instructions: 'Is the category necessary?' | t('cookie-consent-manager'),
+            id: 'required',
+            name: 'required',
+            on: category.required,
+            errors: category.getErrors('required'),
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Default'|t('cookie-consent-manager'),
+            instructions: 'Is the category enabled by default?' | t('cookie-consent-manager'),
+            id: 'default',
+            name: 'default',
+            on: category.default,
+            errors: category.getErrors('default'),
+        }) }}
+    </div>
+{% endblock %}
+
+{% block details %}
+    <fieldset>
+        <legend class="h6">{{ 'Status'|t('app') }}</legend>
+        <div class="meta">
+            {% for row in enabledForSites %}
+                {{ forms.lightswitchField({
+                    label: row.name,
+                    id: 'enabled-' ~ row.siteId,
+                    name: 'enabled[' ~ row.siteId ~ ']',
+                    on: row.enabled,
+                }) }}
+            {% endfor %}
+        </div>
+    </fieldset>
+
+    {% if category.id %}
+        <dl class="meta read-only">
+            <div class="data">
+                <dt class="heading">{{ 'ID'|t('app') }}</dt>
+                <dd class="value">{{ category.id }}</dd>
+            </div>
+            <div class="data">
+                <dt class="heading">{{ 'Created at'|t('app') }}</dt>
+                <dd class="value">{{ category.dateCreated|datetime('short') }}</dd>
+            </div>
+            <div class="data">
+                <dt class="heading">{{ 'Updated at'|t('app') }}</dt>
+                <dd class="value">{{ category.dateUpdated|datetime('short') }}</dd>
+            </div>
+        </dl>
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,9 @@
+{% set permissionsToView = {
+    'cookie-consent-manager/categories': 'cookie-consent-manager-manageCategories',
+} %}
+
+{% for url, permission in permissionsToView|filter(permission => currentUser.can(permission)) %}
+    {% redirect url %}
+{% endfor %}
+
+{% exit 403 %}
