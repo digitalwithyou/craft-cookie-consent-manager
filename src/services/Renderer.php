@@ -36,6 +36,7 @@ class Renderer extends Component
             'page_scripts' => $settings->pageScripts,
             'remove_cookie_tables' => $settings->removeCookieTables,
             'hide_from_bots' => $settings->hideFromBots,
+            'autorun' => $settings->autorun,
             'languages' => [
                 $currentLang => [
                     'consent_modal' =>  [

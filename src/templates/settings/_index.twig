@@ -45,6 +45,13 @@
             on: settings.autoclearCookies,
         }) }}
 
+        {{ forms.lightswitchField({
+            label: 'Autorun'|t('cookie-consent-manager'),
+            instructions: 'Enable if you want to show the cookie consent as soon as possible (otherwise you need to manually call the .show() method)'|t('cookie-consent-manager'),
+            name: 'autorun',
+            on: settings.autorun,
+        }) }}
+
         <hr>
 
         <div class="buttons">
