@@ -83,7 +83,7 @@ class Renderer extends Component
 
         $config = Json::encode($config);
 
-        $view->registerJs("var cc = initCookieConsent(); cc.run({$config});", View::POS_END);
+        $view->registerJs("window.cc = initCookieConsent(); window.cc.run({$config});", View::POS_END);
     }
 
     private function _getSettingsBlocks(): array
