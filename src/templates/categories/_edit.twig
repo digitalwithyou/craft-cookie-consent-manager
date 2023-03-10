@@ -1,5 +1,7 @@
 {% extends 'cookie-consent-manager/_layouts/cp' %}
 
+{% set selectedSubnavItem = 'categories' %}
+
 {% set title = category.name
     ? "Edit Category"|t('cookie-consent-manager')
     : "Create Category"|t('cookie-consent-manager') %}

@@ -1,5 +1,7 @@
 {% extends 'cookie-consent-manager/_layouts/cp' %}
 
+{% set selectedSubnavItem = 'categories' %}
+
 {% set title = "Cookie Categories"|t('cookie-consent-manager') %}
 
 {% do view.registerAssetBundle('craft\\web\\assets\\admintable\\AdminTableAsset') -%}
