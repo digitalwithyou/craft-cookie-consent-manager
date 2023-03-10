@@ -66,6 +66,18 @@ class Renderer extends Component
                     ],
                 ],
             ],
+            'gui_options' => [
+                'consent_modal' => [
+                    'layout' => $settings->layout,
+                    'position' => $settings->position,
+                    'transition' => $settings->transition,
+                    'swap_buttons' => $settings->swapButtons,
+                ],
+                'settings_modal' => [
+                    'layout' => $settings->settingsModalLayout,
+                    'transition' => $settings->settingsModalTransition,
+                ],
+            ],
         ];
 
         $config = Json::encode($config);

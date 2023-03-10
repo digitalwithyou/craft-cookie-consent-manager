@@ -1,0 +1,94 @@
+{% extends 'cookie-consent-manager/_layouts/settings' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'layout' %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/settings/save') }}
+        {{ csrfInput() }}
+
+        <h2>{{ 'Consent modal'|t }}</h2>
+
+        {{ forms.radioGroupField({
+            label: 'Layout'|t('cookie-consent-manager'),
+            name: 'layout',
+            options: [
+                { value: 'box', label: 'Box'|t('cookie-consent-manager') },
+                { value: 'cloud', label: 'Cloud'|t('cookie-consent-manager') },
+                { value: 'bar', label: 'Bar'|t('cookie-consent-manager') },
+            ],
+            value: settings.layout,
+        }) }}
+
+        {{ forms.radioGroupField({
+            label: 'Position'|t('cookie-consent-manager'),
+            name: 'position',
+            options: [
+                { value: 'top left', label: 'Top - Left'|t('cookie-consent-manager') },
+                { value: 'top center', label: 'Top - Center'|t('cookie-consent-manager') },
+                { value: 'top right', label: 'Top - Right'|t('cookie-consent-manager') },
+                { value: 'middle left', label: 'Middle - Left'|t('cookie-consent-manager') },
+                { value: 'middle center', label: 'Middle - Center'|t('cookie-consent-manager') },
+                { value: 'middle right', label: 'Middle - Right'|t('cookie-consent-manager') },
+                { value: 'bottom left', label: 'Bottom - Left'|t('cookie-consent-manager') },
+                { value: 'bottom center', label: 'Bottom - Center'|t('cookie-consent-manager') },
+                { value: 'bottom right', label: 'Bottom - Right'|t('cookie-consent-manager') },
+            ],
+            value: settings.position,
+        }) }}
+
+        {{ forms.radioGroupField({
+            label: 'Transition'|t('cookie-consent-manager'),
+            name: 'transition',
+            options: [
+                { value: '', label: 'None'|t('cookie-consent-manager') },
+                { value: 'slide', label: 'Slide'|t('cookie-consent-manager') },
+                { value: 'zoom', label: 'Zoom'|t('cookie-consent-manager') },
+            ],
+            value: settings.transition,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Swap buttons'|t('cookie-consent-manager'),
+            instructions: 'Enable to invert buttons'|t('cookie-consent-manager'),
+            name: 'swapButtons',
+            on: settings.swapButtons,
+        }) }}
+
+        <hr>
+
+        <h2>{{ 'Settings modal'|t }}</h2>
+
+        {{ forms.radioGroupField({
+            label: 'Layout'|t('cookie-consent-manager'),
+            name: 'settingsModalLayout',
+            options: [
+                { value: 'box', label: 'Box'|t('cookie-consent-manager') },
+                { value: 'bar', label: 'Bar'|t('cookie-consent-manager') },
+            ],
+            value: settings.settingsModalLayout,
+        }) }}
+
+        {{ forms.radioGroupField({
+            label: 'Transition'|t('cookie-consent-manager'),
+            name: 'settingsModalTransition',
+            options: [
+                { value: '', label: 'None'|t('cookie-consent-manager') },
+                { value: 'slide', label: 'Slide'|t('cookie-consent-manager') },
+                { value: 'zoom', label: 'Zoom'|t('cookie-consent-manager') },
+            ],
+            value: settings.settingsModalTransition,
+        }) }}
+
+        <hr>
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}

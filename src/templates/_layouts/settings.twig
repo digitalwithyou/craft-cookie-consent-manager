@@ -1,0 +1,26 @@
+{% extends 'cookie-consent-manager/_layouts/cp' %}
+
+{% set title = "Cookie Consent Manager Settings"|t('cookie-consent-manager') %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') }
+] %}
+
+{% set navItems = {
+    general: { label: "General"|t('app'), url: url('cookie-consent-manager/settings') },
+    layout: { label: "Layout"|t('cookie-consent-manager'), url: url('cookie-consent-manager/settings/layout') },
+    cookies: { label: "Cookies"|t('cookie-consent-manager'), url: url('cookie-consent-manager/settings/cookies') },
+} %}
+
+{% set docTitle = navItems[selectedNavItem].label~' - '~title %}
+
+{% block sidebar %}
+    {% include "_includes/nav"
+        with {
+            label: title,
+            items: navItems,
+            selectedItem: selectedNavItem,
+        }
+        only
+    %}
+{% endblock %}

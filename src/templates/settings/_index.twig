@@ -1,8 +1,8 @@
-{% extends 'cookie-consent-manager/_layouts/cp' %}
-
-{% set title = "Cookie Consent Manager Settings"|t('cookie-consent-manager') %}
+{% extends 'cookie-consent-manager/_layouts/settings' %}
 
 {% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'general' %}
 
 {% block content %}
 
@@ -10,14 +10,15 @@
         {{ actionInput('cookie-consent-manager/settings/save') }}
         {{ csrfInput() }}
 
-        <h2>{{ 'General'|t }}</h2>
-
         {{ forms.textField({
+            first: true,
             label: 'Plugin name'|t('cookie-consent-manager'),
             instructions: 'How should the Plugin be called in the Control Panel?'|t('cookie-consent-manager'),
             name: 'name',
             value: settings.name,
         }) }}
+
+        <hr>
 
         {{ forms.radioGroupField({
             label: 'Mode'|t('cookie-consent-manager'),
@@ -42,26 +43,6 @@
             instructions: 'Enable if you want to automatically delete cookies when user opts-out of a specific category inside cookie settings'|t('cookie-consent-manager'),
             name: 'autoclearCookies',
             on: settings.autoclearCookies,
-        }) }}
-
-        <hr>
-
-        <h2>{{ 'Cookies'|t }}</h2>
-
-        {{ forms.textField({
-            label: 'Cookie expiration'|t('cookie-consent-manager'),
-            instructions: 'Number of days before the cookie expires (Default: 182 days = 6 months)'|t('cookie-consent-manager'),
-            name: 'cookieExpiration',
-            value: settings.cookieExpiration,
-            inputmode: 'numeric',
-            size: 4,
-        }) }}
-
-        {{ forms.lightswitchField({
-            label: 'Use rfc cookie'|t('cookie-consent-manager'),
-            instructions: 'Enable if you want the value of the cookie to be rfc compliant'|t('cookie-consent-manager'),
-            name: 'useRfcCookie',
-            on: settings.useRfcCookie,
         }) }}
 
         <hr>

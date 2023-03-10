@@ -19,6 +19,8 @@ trait Routes
             $event->rules['cookie-consent-manager/categories/<categoryId:\d+>'] = 'cookie-consent-manager/categories/edit';
 
             $event->rules['cookie-consent-manager/settings'] = 'cookie-consent-manager/settings/index';
+            $event->rules['cookie-consent-manager/settings/layout'] = 'cookie-consent-manager/settings/layout';
+            $event->rules['cookie-consent-manager/settings/cookies'] = 'cookie-consent-manager/settings/cookies';
         });
     }
 }

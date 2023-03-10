@@ -8,14 +8,36 @@ use dwy\CookieConsentManager\Plugin;
 
 class SettingsController extends BaseCpController
 {
+    public function init(): void
+    {
+        parent::init();
+
+        $this->requireAdmin();
+    }
 
     public function actionIndex(): Response
     {
-        $this->requireAdmin();
-
         $settings = Plugin::getInstance()->getSettings();
 
         return $this->renderTemplate('cookie-consent-manager/settings/_index', compact(
+            'settings',
+        ));
+    }
+
+    public function actionLayout(): Response
+    {
+        $settings = Plugin::getInstance()->getSettings();
+
+        return $this->renderTemplate('cookie-consent-manager/settings/_layout', compact(
+            'settings',
+        ));
+    }
+
+    public function actionCookies(): Response
+    {
+        $settings = Plugin::getInstance()->getSettings();
+
+        return $this->renderTemplate('cookie-consent-manager/settings/_cookies', compact(
             'settings',
         ));
     }
