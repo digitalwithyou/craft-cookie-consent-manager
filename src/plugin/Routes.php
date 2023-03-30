@@ -18,9 +18,13 @@ trait Routes
             $event->rules['cookie-consent-manager/categories/reorder'] = 'cookie-consent-manager/categories/reorder';
             $event->rules['cookie-consent-manager/categories/<categoryId:\d+>'] = 'cookie-consent-manager/categories/edit';
 
+            $event->rules['cookie-consent-manager/content'] = 'cookie-consent-manager/content/index';
+            $event->rules['cookie-consent-manager/content/settings'] = 'cookie-consent-manager/content/settings';
+
             $event->rules['cookie-consent-manager/settings'] = 'cookie-consent-manager/settings/index';
             $event->rules['cookie-consent-manager/settings/layout'] = 'cookie-consent-manager/settings/layout';
             $event->rules['cookie-consent-manager/settings/cookies'] = 'cookie-consent-manager/settings/cookies';
+            $event->rules['cookie-consent-manager/settings/plugin'] = 'cookie-consent-manager/settings/plugin';
         });
     }
 }

@@ -3,6 +3,7 @@
 namespace dwy\CookieConsentManager\plugin;
 
 use dwy\CookieConsentManager\services\Categories;
+use dwy\CookieConsentManager\services\Content;
 use dwy\CookieConsentManager\services\Renderer;
 
 trait Services
@@ -11,6 +12,7 @@ trait Services
     {
         $this->setComponents([
             'categories' => Categories::class,
+            'content' => Content::class,
             'renderer' => Renderer::class,
         ]);
     }

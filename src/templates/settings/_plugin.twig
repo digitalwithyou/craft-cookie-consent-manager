@@ -1,0 +1,33 @@
+{% extends 'cookie-consent-manager/_layouts/settings' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'plugin' %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/settings/save') }}
+        {{ csrfInput() }}
+
+        {{ forms.textField({
+            first: true,
+            label: 'Plugin name'|t('cookie-consent-manager'),
+            instructions: 'How should the Plugin be called in the Control Panel?'|t('cookie-consent-manager'),
+            name: 'name',
+            value: settings.name,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Manage content as Craft Translations'|t('cookie-consent-manager'),
+            name: 'manageContentAsTranslations',
+            on: settings.manageContentAsTranslations,
+        }) }}
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}

@@ -10,8 +10,11 @@ class Settings extends Model
      * General
      */
 
-     // Name of the plugin in navigation
+    // Name of the plugin in navigation
     public string $name = 'Cookies';
+
+    // Where to manage content
+    public bool $manageContentAsTranslations = false;
 
     // Accepted values:
     // - opt-in: scripts will not run unless consent is given (gdpr compliant)

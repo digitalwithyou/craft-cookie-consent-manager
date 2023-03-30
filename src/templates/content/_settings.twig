@@ -1,0 +1,149 @@
+{% extends 'cookie-consent-manager/_layouts/content' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'settingsModal' %}
+
+{% set contextMenu %}
+    {% if craft.app.getIsMultiSite() %}
+        {% include '_elements/sitemenu' with {
+            urlFormat: cpUrl("cookie-consent-manager/content/settings", {site: '{handle}'}),
+        } %}
+    {% endif %}
+{% endset %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/content/save') }}
+        {{ csrfInput() }}
+
+        <h2 class="first">Heading</h2>
+
+        {{ forms.textField({
+            label: 'Title'|t('cookie-consent-manager'),
+            name: 'settingsModalHeading',
+            value: content.settingsModalHeading ?? '',
+            required: true,
+            size: 50,
+        }) }}
+
+        <hr>
+
+        <h2>Header</h2>
+
+        {{ forms.textField({
+            label: 'Title'|t('cookie-consent-manager'),
+            name: 'settingsModalHeaderTitle',
+            value: content.settingsModalHeaderTitle ?? '',
+            size: 50,
+        }) }}
+
+        {{ forms.textareaField({
+            label: 'Text'|t('cookie-consent-manager'),
+            instructions: 'HTML is allowed in this field.'|t('cookie-consent-manager'),
+            name: 'settingsModalHeaderText',
+            value: content.settingsModalHeaderText ?? '',
+            rows: 2,
+            cols: 50,
+        }) }}
+
+        <hr>
+
+        <h2>Footer</h2>
+
+        {{ forms.textField({
+            label: 'Title'|t('cookie-consent-manager'),
+            name: 'settingsModalFooterTitle',
+            value: content.settingsModalFooterTitle ?? '',
+            size: 50,
+        }) }}
+
+        {{ forms.textareaField({
+            label: 'Text'|t('cookie-consent-manager'),
+            instructions: 'HTML is allowed in this field.'|t('cookie-consent-manager'),
+            name: 'settingsModalFooterText',
+            value: content.settingsModalFooterText ?? '',
+            rows: 2,
+            cols: 50,
+        }) }}
+
+        <hr>
+
+        <h2>Buttons</h2>
+
+        {{ forms.textField({
+            label: 'Save settings button'|t('cookie-consent-manager'),
+            name: 'settingsModalSaveSettingsButton',
+            value: content.settingsModalSaveSettingsButton ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Accept all button'|t('cookie-consent-manager'),
+            name: 'settingsModalAcceptAllButton',
+            value: content.settingsModalAcceptAllButton ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Reject all button'|t('cookie-consent-manager'),
+            name: 'settingsModalRejectAllButton',
+            value: content.settingsModalRejectAllButton ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Close button'|t('cookie-consent-manager'),
+            name: 'settingsModalCloseButton',
+            value: content.settingsModalCloseButton ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        <hr>
+
+        <h2>Cookie table</h2>
+
+        {{ forms.textField({
+            label: 'Cookie name'|t('cookie-consent-manager'),
+            name: 'settingsModalCookieName',
+            value: content.settingsModalCookieName ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Cookie domain'|t('cookie-consent-manager'),
+            name: 'settingsModalCookieDomain',
+            value: content.settingsModalCookieDomain ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Cookie expiration'|t('cookie-consent-manager'),
+            name: 'settingsModalCookieExpiration',
+            value: content.settingsModalCookieExpiration ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Cookie description'|t('cookie-consent-manager'),
+            name: 'settingsModalCookieDescription',
+            value: content.settingsModalCookieDescription ?? '',
+            required: true,
+            size: 30,
+        }) }}
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}

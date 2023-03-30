@@ -10,7 +10,7 @@
         {{ actionInput('cookie-consent-manager/settings/save') }}
         {{ csrfInput() }}
 
-        <h2>{{ 'Consent modal'|t }}</h2>
+        <h2 class="first">{{ 'Consent modal'|t }}</h2>
 
         {{ forms.radioGroupField({
             label: 'Layout'|t('cookie-consent-manager'),

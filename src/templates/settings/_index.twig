@@ -10,16 +10,6 @@
         {{ actionInput('cookie-consent-manager/settings/save') }}
         {{ csrfInput() }}
 
-        {{ forms.textField({
-            first: true,
-            label: 'Plugin name'|t('cookie-consent-manager'),
-            instructions: 'How should the Plugin be called in the Control Panel?'|t('cookie-consent-manager'),
-            name: 'name',
-            value: settings.name,
-        }) }}
-
-        <hr>
-
         {{ forms.radioGroupField({
             label: 'Mode'|t('cookie-consent-manager'),
             name: 'mode',
@@ -51,8 +41,6 @@
             name: 'autorun',
             on: settings.autorun,
         }) }}
-
-        <hr>
 
         <div class="buttons">
             {{ forms.submitButton({label: 'Save'|t('app')}) }}

@@ -12,6 +12,7 @@ trait CpSection
     private function _registerCpSection()
     {
         $this->hasCpSection = true;
+        $this->hasCpSettings = true;
     }
 
     public function getCpNavItem(): ?array
@@ -22,6 +23,10 @@ trait CpSection
 
         if (Craft::$app->getUser()->checkPermission('cookie-consent-manager-manageCategories')) {
             $item['subnav']['categories'] = ['label' => 'Categories', 'url' => 'cookie-consent-manager/categories'];
+        }
+
+        if (Craft::$app->getUser()->checkPermission('cookie-consent-manager-manageContent') && !$this->getSettings()->manageContentAsTranslations) {
+            $item['subnav']['content'] = ['label' => 'Content', 'url' => 'cookie-consent-manager/content'];
         }
 
         if (Craft::$app->getUser()->getIsAdmin() && Craft::$app->getConfig()->getGeneral()->allowAdminChanges) {

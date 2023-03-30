@@ -5,6 +5,7 @@ namespace dwy\CookieConsentManager\controllers;
 use Craft;
 use craft\web\Response;
 use dwy\CookieConsentManager\Plugin;
+use dwy\CookieConsentManager\helpers\Request as RequestHelpers;
 
 class SettingsController extends BaseCpController
 {
@@ -42,11 +43,20 @@ class SettingsController extends BaseCpController
         ));
     }
 
+    public function actionPlugin(): Response
+    {
+        $settings = Plugin::getInstance()->getSettings();
+
+        return $this->renderTemplate('cookie-consent-manager/settings/_plugin', compact(
+            'settings',
+        ));
+    }
+
     public function actionSave(): Response
     {
         $this->requirePostRequest();
 
-        $params = $this->_getSettingsParams();
+        $params = RequestHelpers::getAllParams();
 
         $settings = Plugin::getInstance()->getSettings();
 
@@ -65,20 +75,5 @@ class SettingsController extends BaseCpController
         }
 
         return $this->redirectToPostedUrl();
-    }
-
-    private function _getSettingsParams(): array
-    {
-        $keysToFilter = [
-            'action',
-            'redirect',
-            Craft::$app->getConfig()->getGeneral()->csrfTokenName,
-        ];
-
-        $params = $this->request->getBodyParams();
-
-        return array_filter($params, function($key) use ($keysToFilter) {
-            return !in_array($key, $keysToFilter);
-        }, ARRAY_FILTER_USE_KEY);
     }
 }

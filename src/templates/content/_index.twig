@@ -1,0 +1,65 @@
+{% extends 'cookie-consent-manager/_layouts/content' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'consentModal' %}
+
+{% set contextMenu %}
+    {% if craft.app.getIsMultiSite() %}
+        {% include '_elements/sitemenu' with {
+            urlFormat: cpUrl("cookie-consent-manager/content/", {site: '{handle}'}),
+        } %}
+    {% endif %}
+{% endset %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/content/save') }}
+        {{ csrfInput() }}
+
+        {{ forms.textField({
+            first: true,
+            label: 'Heading'|t('cookie-consent-manager'),
+            name: 'consentModalHeading',
+            value: content.consentModalHeading ?? '',
+            size: 50,
+        }) }}
+
+        {{ forms.textareaField({
+            label: 'Text'|t('cookie-consent-manager'),
+            instructions: 'Use the placeholder `#settings#` to add a settings link. HTML is allowed in this field.'|t('cookie-consent-manager'),
+            name: 'consentModalText',
+            value: content.consentModalText ?? '',
+            rows: 2,
+            cols: 50,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Settings link label'|t('cookie-consent-manager'),
+            name: 'consentModalSettingsLabel',
+            value: content.consentModalSettingsLabel ?? '',
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Accept button'|t('cookie-consent-manager'),
+            name: 'consentModalAcceptButton',
+            value: content.consentModalAcceptButton ?? '',
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Reject button'|t('cookie-consent-manager'),
+            name: 'consentModalRejectButton',
+            value: content.consentModalRejectButton ?? '',
+            size: 30,
+        }) }}
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}

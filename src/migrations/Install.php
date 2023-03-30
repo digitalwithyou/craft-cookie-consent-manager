@@ -5,10 +5,12 @@ namespace dwy\CookieConsentManager\migrations;
 use Craft;
 use craft\db\Migration;
 use craft\records\Site;
+use dwy\CookieConsentManager\Plugin;
 use dwy\CookieConsentManager\models\Category;
 use dwy\CookieConsentManager\models\CategorySite;
 use dwy\CookieConsentManager\records\Category as CategoryRecord;
 use dwy\CookieConsentManager\records\CategorySite as CategorySiteRecord;
+use dwy\CookieConsentManager\records\Content as ContentRecord;
 
 class Install extends Migration
 {
@@ -49,12 +51,20 @@ class Install extends Migration
             'description' => $this->text(),
             'sortOrder' => $this->integer(),
         ]);
+
+        $this->createTable(ContentRecord::tableName(), [
+            'id' => $this->primaryKey(),
+            'siteId' => $this->integer()->notNull(),
+            'key' => $this->string()->notNull(),
+            'value' => $this->string()->notNull(),
+        ]);
     }
 
     protected function dropTables()
     {
         $this->dropTable(CategorySiteRecord::tableName());
         $this->dropTable(CategoryRecord::tableName());
+        $this->dropTable(ContentRecord::tableName());
     }
 
     protected function createIndexes()
@@ -66,12 +76,20 @@ class Install extends Migration
     {
         $this->addForeignKey(null, CategorySiteRecord::tableName(), ['categoryId'], CategoryRecord::tableName(), ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, CategorySiteRecord::tableName(), ['siteId'], Site::tableName(), ['id'], 'CASCADE', 'CASCADE');
+
+        $this->addForeignKey(null, ContentRecord::tableName(), ['siteId'], Site::tableName(), ['id'], 'CASCADE', 'CASCADE');
     }
 
     protected function insertDefaultData()
     {
         $sites = Craft::$app->getSites()->getAllSites();
 
+        $this->insertDefaultCategoryData($sites);
+        $this->insertDefaultContentData($sites);
+    }
+
+    protected function insertDefaultCategoryData($sites)
+    {
         $categories = [
             [
                 'id' => 1,
@@ -119,6 +137,15 @@ class Install extends Migration
                     'sortOrder' => $category['sortOrder'],
                 ]);
             }
+        }
+    }
+
+    protected function insertDefaultContentData($sites)
+    {
+        $contentService = Plugin::getInstance()->content;
+
+        foreach($sites as $site) {
+            $contentService->insertDefaultDataForSite($site->id);
         }
     }
 }

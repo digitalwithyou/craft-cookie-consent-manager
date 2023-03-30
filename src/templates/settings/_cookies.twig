@@ -11,6 +11,7 @@
         {{ csrfInput() }}
 
         {{ forms.textField({
+            first: true,
             label: 'Cookie expiration'|t('cookie-consent-manager'),
             instructions: 'Number of days before the cookie expires (Default: 182 days = 6 months)'|t('cookie-consent-manager'),
             name: 'cookieExpiration',

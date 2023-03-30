@@ -5,6 +5,7 @@ namespace dwy\CookieConsentManager\controllers;
 use Craft;
 use craft\helpers\Json;
 use dwy\CookieConsentManager\Plugin;
+use dwy\CookieConsentManager\helpers\Request as RequestHelpers;
 use dwy\CookieConsentManager\services\Categories as CategoriesService;
 use yii\web\Response;
 
@@ -23,8 +24,7 @@ class CategoriesController extends BaseCpController
 
     public function actionIndex(): Response
     {
-        $siteHandle = $this->request->getParam('site') ?? Craft::$app->getSites()->currentSite->handle;
-        $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+        $site = RequestHelpers::getSite();
 
         $categories =  $this->service->getAllForSite($site->id);
 
@@ -36,8 +36,7 @@ class CategoriesController extends BaseCpController
 
     public function actionAdd(): Response
     {
-        $siteHandle = $this->request->getParam('site') ?? Craft::$app->getSites()->currentSite->handle;
-        $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+        $site = RequestHelpers::getSite();
 
         $category =  $this->service->create();
 
@@ -52,8 +51,7 @@ class CategoriesController extends BaseCpController
 
     public function actionEdit(int $categoryId = null): Response
     {
-        $siteHandle = $this->request->getRequiredParam('site');
-        $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+        $site = RequestHelpers::getSite();
 
         $category =  $this->service->get($categoryId, $site->id);
         $enabledForSites =  $this->service->getEnabledForCategory($categoryId);
@@ -69,10 +67,8 @@ class CategoriesController extends BaseCpController
     {
         $this->requirePostRequest();
 
-        $params = $this->request->getBodyParams();
-        $siteHandle = $this->request->getRequiredParam('site');
-
-        $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
+        $params = RequestHelpers::getAllParams();
+        $site = RequestHelpers::getSite();
 
         if (!$this->service->save($params, $site->id)) {
             return $this->asFailure(
@@ -107,10 +103,9 @@ class CategoriesController extends BaseCpController
         $this->requireAcceptsJson();
 
         $ids = $this->request->getRequiredBodyParam('ids');
-        $siteHandle = $this->request->getRequiredParam('site');
+        $site = RequestHelpers::getSite();
 
         $ids = Json::decode($ids);
-        $site = Craft::$app->getSites()->getSiteByHandle($siteHandle);
 
         if (!$this->service->reorder($ids, $site->id)) {
             return $this->asFailure(Craft::t('cookie-consent-manager', 'Couldn’t reorder categories.'));

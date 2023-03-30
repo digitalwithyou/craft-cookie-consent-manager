@@ -22,6 +22,9 @@ class Renderer extends Component
 
         $this->_currentSite = Craft::$app->getSites()->getCurrentSite();
         $currentLang = $this->_currentSite->language;
+        $siteId = $this->_currentSite->id;
+
+        $content = Plugin::getInstance()->content;
 
         $config = [
             'current_lang' => $currentLang,
@@ -40,30 +43,30 @@ class Renderer extends Component
             'languages' => [
                 $currentLang => [
                     'consent_modal' =>  [
-                        'title' => Craft::t('banner', 'We use cookies'),
-                        'description' => Craft::t('banner', 'This website uses cookies. <button type="button" data-cc="c-settings" class="cc-link">Preferences</button>'),
+                        'title' => $content->get('consentModalHeading', $siteId),
+                        'description' => $this->_parseConsentModalText($content, $siteId),
                         'primary_btn' => [
-                            'text' => Craft::t('banner', 'Accept all'),
+                            'text' => $content->get('consentModalAcceptButton', $siteId),
                             'role' => 'accept_all',
                         ],
                         'secondary_btn' => [
-                            'text' => Craft::t('banner', 'Reject all'),
+                            'text' => $content->get('consentModalRejectButton', $siteId),
                             'role' => 'accept_necessary',
                         ],
                     ],
                     'settings_modal' => [
-                        'title' => Craft::t('banner', 'Cookie preferences'),
-                        'save_settings_btn' => Craft::t('banner', 'Save settings'),
-                        'accept_all_btn' => Craft::t('banner', 'Accept all'),
-                        'reject_all_btn' => Craft::t('banner', 'Reject all'),
-                        'close_btn_label' => Craft::t('banner', 'Close'),
+                        'title' => $content->get('settingsModalHeading', $siteId),
+                        'save_settings_btn' => $content->get('settingsModalSaveSettingsButton', $siteId),
+                        'accept_all_btn' => $content->get('settingsModalAcceptAllButton', $siteId),
+                        'reject_all_btn' => $content->get('settingsModalRejectAllButton', $siteId),
+                        'close_btn_label' => $content->get('settingsModalCloseButton', $siteId),
                         'cookie_table_headers' => [
-                            ['col1' => Craft::t('banner', 'Name')],
-                            ['col2' => Craft::t('banner', 'Domain')],
-                            ['col3' => Craft::t('banner', 'Expiration')],
-                            ['col4' => Craft::t('banner', 'Description')],
+                            ['col1' => $content->get('settingsModalCookieName', $siteId)],
+                            ['col2' => $content->get('settingsModalCookieDomain', $siteId)],
+                            ['col3' => $content->get('settingsModalCookieExpiration', $siteId)],
+                            ['col4' => $content->get('settingsModalCookieDescription', $siteId)],
                         ],
-                        'blocks' => $this->_getSettingsBlocks(),
+                        'blocks' => $this->_getSettingsBlocks($content, $siteId),
                     ],
                 ],
             ],
@@ -86,23 +89,29 @@ class Renderer extends Component
         $view->registerJs("window.cc = initCookieConsent(); window.cc.run({$config}); window.dispatchEvent(new Event('ccmInitiated'));", View::POS_END);
     }
 
-    private function _getSettingsBlocks(): array
+    private function _getSettingsBlocks($content, $siteId): array
     {
         $blocks = [];
 
-        if (I18NHelper::isTranslated('ConsentSettingsHeaderTitle') || I18NHelper::isTranslated('ConsentSettingsHeaderDescription')) {
+        $settingsModalHeaderTitle = $content->get('settingsModalHeaderTitle', $siteId);
+        $settingsModalHeaderText = $content->get('settingsModalHeaderText ', $siteId);
+
+        if (!empty($settingsModalHeaderTitle) ||!empty($settingsModalHeaderText) ) {
             $blocks[] = [
-                'title' => Craft::t('banner', 'ConsentSettingsHeaderTitle'),
-                'description' => Craft::t('banner', 'ConsentSettingsHeaderDescription'),
+                'title' => $settingsModalHeaderTitle,
+                'description' => $settingsModalHeaderText,
             ];
         }
 
         $blocks = array_merge($blocks, $this->_getCategories());
 
-        if (I18NHelper::isTranslated('ConsentSettingsFooterTitle') || I18NHelper::isTranslated('ConsentSettingsFooterDescription')) {
+        $settingsModalFooterTitle = $content->get('settingsModalFooterTitle', $siteId);
+        $settingsModalFooterText = $content->get('settingsModalFooterText ', $siteId);
+
+        if (!empty($settingsModalFooterTitle) ||!empty($settingsModalFooterText) ) {
             $blocks[] = [
-                'title' => Craft::t('banner', 'ConsentSettingsFooterTitle'),
-                'description' => Craft::t('banner', 'ConsentSettingsFooterDescription'),
+                'title' => $settingsModalFooterTitle,
+                'description' => $settingsModalFooterText,
             ];
         }
 
@@ -126,5 +135,17 @@ class Renderer extends Component
         }
 
         return $data;
+    }
+
+    private function _parseConsentModalText($content, $siteId): string
+    {
+        $settingsLabel = $content->get('consentModalSettingsLabel', $siteId);
+        $text = $content->get('consentModalText', $siteId);
+
+        return str_replace(
+            '#settings#',
+            '<button type="button" data-cc="c-settings" class="cc-link">'.$settingsLabel.'</button>',
+            $text
+        );
     }
 }
