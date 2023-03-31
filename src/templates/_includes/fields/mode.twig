@@ -1,0 +1,77 @@
+{%- set options = options ?? [] %}
+{%- set value = value ?? null %}
+
+{%- set class = (class ?? [])|explodeClass|merge([
+    'radio-group mode',
+    (toggle ?? false) ? 'fieldtoggle' : null,
+    (disabled ?? false) ? 'disabled' : null,
+]|filter) %}
+
+{%- set containerAttributes = {
+    class: class,
+    data: {
+        'target-prefix': targetPrefix ?? false,
+    },
+}|merge(containerAttributes ?? [], recursive=true) %}
+
+{%- if block('attr') is defined %}
+    {%- set containerAttributes = containerAttributes|merge(('<div ' ~ block('attr') ~ '>')|parseAttr, recursive=true) %}
+{% endif %}
+
+{% macro modeInput(name, label, helpText, value) %}
+    <div>
+        {% set id = "radio#{random()}" %}
+
+        <img src="{{ craft.app.assetManager.getPublishedUrl('@dwy/CookieConsentManager/web/assets/cp/dist/' ~ name ~ '.svg', true) }}">
+
+        <div class="input-wrapper">
+            {{ tag('input', {
+                type: 'radio',
+                id: id,
+                class: "radio",
+                name: 'mode',
+                value: name,
+                checked: value == name,
+            }) }}
+
+            {% tag 'label' with {'for': id} %}
+                {{ label|t('cookie-consent-manager') }}
+            {% endtag %}
+        </div>
+
+        <p class="input-help">
+            {{ helpText|t('cookie-consent-manager')|raw }}
+        </p>
+    </div>
+{% endmacro %}
+
+{% tag 'div' with containerAttributes %}
+    {{ _self.modeInput('opt-in', 'Opt-in', 'Scripts will not run unless consent is given<br>(GDPR compliant)', value) }}
+    {{ _self.modeInput('opt-out', 'Opt-out', 'Scripts (that have categories set as enabled by default) will run without consent, until an explicit choice is made', value) }}
+{% endtag %}
+
+{% css %}
+    .radio-group.mode {
+        display: grid;
+        gap: 2.5rem;
+        grid-template-columns: 1fr 1fr;
+        max-width: 700px;
+        margin-block-start: 1.5rem;
+        margin-block-end: 1.5rem;
+    }
+
+    .radio-group.mode > div {
+        possition: relative;
+        text-align: center;
+    }
+
+    .radio-group.mode label {
+        font-weight: 600;
+    }
+
+    .radio-group.mode img {
+        height: auto;
+        width: 100%;
+    }
+
+{% endcss %}

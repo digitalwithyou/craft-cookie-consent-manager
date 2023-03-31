@@ -10,7 +10,8 @@
         {{ actionInput('cookie-consent-manager/settings/save') }}
         {{ csrfInput() }}
 
-        {{ forms.radioGroupField({
+        {{ craft.cp.field('template:cookie-consent-manager/_includes/fields/mode', {
+            first: true,
             label: 'Mode'|t('cookie-consent-manager'),
             name: 'mode',
             instructions: 'When should scripts run?'|t('cookie-consent-manager'),
@@ -19,7 +20,7 @@
                 { value: 'opt-out', label: '<b>Opt-out</b>: scripts — that have categories set as enabled by default — will run without consent, until an explicit choice is made'|t('cookie-consent-manager') },
             ],
             value: settings.mode,
-        }) }}
+        })|raw }}
 
         {{ forms.lightswitchField({
             label: 'Force consent'|t('cookie-consent-manager'),
