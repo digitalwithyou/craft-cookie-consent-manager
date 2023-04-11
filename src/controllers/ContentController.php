@@ -34,13 +34,13 @@ class ContentController extends BaseCpController
         ));
     }
 
-    public function actionSettings(): Response
+    public function actionPreferences(): Response
     {
         $site = RequestHelpers::getSite();
 
         $content = $this->service->getAllFromDb($site->id);
 
-        return $this->renderTemplate('cookie-consent-manager/content/_settings', compact(
+        return $this->renderTemplate('cookie-consent-manager/content/_preferences', compact(
             'site',
             'content',
         ));

@@ -23,24 +23,31 @@
         })|raw }}
 
         {{ forms.lightswitchField({
-            label: 'Force consent'|t('cookie-consent-manager'),
-            instructions: 'Enable if you want to block page navigation until user action'|t('cookie-consent-manager'),
-            name: 'forceConsent',
-            on: settings.forceConsent,
+            label: 'Auto show'|t('cookie-consent-manager'),
+            instructions: 'Automatically show the consent modal if consent is not valid.'|t('cookie-consent-manager'),
+            name: 'autoShow',
+            on: settings.autoShow,
         }) }}
 
         {{ forms.lightswitchField({
-            label: 'Autoclear cookies'|t('cookie-consent-manager'),
-            instructions: 'Enable if you want to automatically delete cookies when user opts-out of a specific category inside cookie settings'|t('cookie-consent-manager'),
-            name: 'autoclearCookies',
-            on: settings.autoclearCookies,
+            label: 'Auto clear cookies'|t('cookie-consent-manager'),
+            instructions: 'Clears cookies when user rejects a specific category.'|t('cookie-consent-manager'),
+            name: 'autoClearCookies',
+            on: settings.autoClearCookies,
         }) }}
 
         {{ forms.lightswitchField({
-            label: 'Autorun'|t('cookie-consent-manager'),
-            instructions: 'Enable if you want to show the cookie consent as soon as possible (otherwise you need to manually call the .show() method)'|t('cookie-consent-manager'),
-            name: 'autorun',
-            on: settings.autorun,
+            label: 'Hide from bots'|t('cookie-consent-manager'),
+            instructions: 'Stops the plugin\'s execution when a bot/crawler is detected, to prevent them from indexing the modal\'s content.'|t('cookie-consent-manager'),
+            name: 'hideFromBots',
+            on: settings.hideFromBots,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Disable page interaction'|t('cookie-consent-manager'),
+            instructions: 'Creates a dark overlay and blocks the page scroll until consent is expressed.'|t('cookie-consent-manager'),
+            name: 'disablePageInteraction',
+            on: settings.disablePageInteraction,
         }) }}
 
         <div class="buttons">

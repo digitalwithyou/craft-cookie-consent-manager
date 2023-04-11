@@ -34,11 +34,11 @@ class SettingsController extends BaseCpController
         ));
     }
 
-    public function actionCookies(): Response
+    public function actionDeveloper(): Response
     {
         $settings = Plugin::getInstance()->getSettings();
 
-        return $this->renderTemplate('cookie-consent-manager/settings/_cookies', compact(
+        return $this->renderTemplate('cookie-consent-manager/settings/_developer', compact(
             'settings',
         ));
     }

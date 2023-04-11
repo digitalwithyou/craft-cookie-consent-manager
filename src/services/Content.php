@@ -116,31 +116,31 @@ class Content extends Component
         $site = Craft::$app->getSites()->getSiteById($siteId);
 
         $data = [
-            'consentModalHeading' => 'Cookies',
-            'consentModalText' => 'This website uses cookies to provide a better browsing experience. #settings#',
-            'consentModalSettingsLabel' => 'Preferences',
-            'consentModalAcceptButton' => 'Accept',
-            'consentModalRejectButton' => 'Reject',
-            'settingsModalHeading' => 'Cookie settings',
-            'settingsModalHeaderTitle' => '',
-            'settingsModalHeaderText' => '',
-            'settingsModalFooterTitle' => '',
-            'settingsModalFooterText' => '',
-            'settingsModalSaveSettingsButton' => 'Save',
-            'settingsModalAcceptAllButton' => 'Accept all',
-            'settingsModalRejectAllButton' => 'Reject all',
-            'settingsModalCloseButton' => 'Close',
-            'settingsModalCookieName' => 'Name',
-            'settingsModalCookieDomain' => 'Domain',
-            'settingsModalCookieExpiration' => 'Expiration',
-            'settingsModalCookieDescription' => 'Description',
+            'consentModalLabel',
+            'consentModalTitle',
+            'consentModalDescription',
+            'consentModalPreferencesLabel',
+            'consentModalAcceptAllButton',
+            'consentModalAcceptNecessaryButton',
+            'consentModalFooter',
+            'preferencesModalTitle',
+            'preferencesModalAcceptAllButton',
+            'preferencesModalAcceptNecessaryButton',
+            'preferencesModalSavePreferencesButton',
+            'preferencesModalCloseIconLabel',
+            'preferencesModalHeaderTitle',
+            'preferencesModalHeaderText',
+            'preferencesModalFooterTitle',
+            'preferencesModalFooterText',
         ];
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $key) {
+            $value = Craft::t('cookie-banner', $key, [], $site->language);
+
             $content = new ContentRecord();
             $content->siteId = $siteId;
             $content->key = $key;
-            $content->value = Craft::t('cookie-banner', $key, [], $site->language);
+            $content->value = ($value === $key) ? '' : $value;
             $content->save();
         }
     }

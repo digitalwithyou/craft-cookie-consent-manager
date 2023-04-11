@@ -20,40 +20,57 @@
 
         {{ forms.textField({
             first: true,
-            label: 'Heading'|t('cookie-consent-manager'),
-            name: 'consentModalHeading',
-            value: content.consentModalHeading ?? '',
+            label: 'Label'|t('cookie-consent-manager'),
+            instructions: 'Provide the modal with an accessible name, used by screen readers.'|t('cookie-consent-manager'),
+            name: 'consentModalLabel',
+            value: content.consentModalLabel ?? '',
+            size: 50,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Title'|t('cookie-consent-manager'),
+            name: 'consentModalTitle',
+            value: content.consentModalTitle ?? '',
             size: 50,
         }) }}
 
         {{ forms.textareaField({
-            label: 'Text'|t('cookie-consent-manager'),
-            instructions: 'Use the placeholder `#settings#` to add a settings link. HTML is allowed in this field.'|t('cookie-consent-manager'),
-            name: 'consentModalText',
-            value: content.consentModalText ?? '',
+            label: 'Description'|t('cookie-consent-manager'),
+            instructions: 'Use the placeholder `{preferences}` to add a preferences link. HTML is allowed in this field.'|t('cookie-consent-manager'),
+            name: 'consentModalDescription',
+            value: content.consentModalDescription ?? '',
             rows: 2,
             cols: 50,
         }) }}
 
         {{ forms.textField({
-            label: 'Settings link label'|t('cookie-consent-manager'),
-            name: 'consentModalSettingsLabel',
-            value: content.consentModalSettingsLabel ?? '',
+            label: 'Preferences link label'|t('cookie-consent-manager'),
+            name: 'consentModalPreferencesLabel',
+            value: content.consentModalPreferencesLabel ?? '',
             size: 30,
         }) }}
 
         {{ forms.textField({
-            label: 'Accept button'|t('cookie-consent-manager'),
-            name: 'consentModalAcceptButton',
-            value: content.consentModalAcceptButton ?? '',
+            label: 'Accept all button'|t('cookie-consent-manager'),
+            name: 'consentModalAcceptAllButton',
+            value: content.consentModalAcceptAllButton ?? '',
             size: 30,
         }) }}
 
         {{ forms.textField({
             label: 'Reject button'|t('cookie-consent-manager'),
-            name: 'consentModalRejectButton',
-            value: content.consentModalRejectButton ?? '',
+            name: 'consentModalAcceptNecessaryButton',
+            value: content.consentModalAcceptNecessaryButton ?? '',
             size: 30,
+        }) }}
+
+        {{ forms.textareaField({
+            label: 'Footer'|t('cookie-consent-manager'),
+            instructions: 'An optional footer. HTML is allowed in this field, so it can be used to add links to your legal documents.'|t('cookie-consent-manager'),
+            name: 'consentModalFooter',
+            value: content.consentModalFooter ?? '',
+            rows: 2,
+            cols: 50,
         }) }}
 
         <div class="buttons">

@@ -18,7 +18,7 @@ class BannerAsset extends AssetBundle
         $this->sourcePath = __DIR__ . '/dist';
 
         $this->js = [
-            'cookieconsent.js',
+            'cookieconsent.umd.js',
         ];
 
         $this->css = [

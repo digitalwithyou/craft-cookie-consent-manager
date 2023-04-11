@@ -1,0 +1,79 @@
+{% extends 'cookie-consent-manager/_layouts/settings' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'developer' %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/settings/save') }}
+        {{ csrfInput() }}
+
+        <h2 class="first">{{ 'Functional'|t('cookie-consent-manager') }}</h2>
+
+        {{ forms.lightswitchField({
+            first: true,
+            label: 'Lazy html generation'|t('cookie-consent-manager'),
+            instructions: 'Delays the generation of the modal\'s markup until they\'re about to become visible, to improve the TTI score.'|t('cookie-consent-manager'),
+            name: 'lazyHtmlGeneration',
+            on: settings.lazyHtmlGeneration,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Manage scripts tags'|t('cookie-consent-manager'),
+            instructions: 'Intercepts all <script> tags with a data-category attribute, and enables them based on the accepted categories. Check out the scripts management section for details and examples.'|t('cookie-consent-manager'),
+            name: 'manageScriptTags',
+            on: settings.manageScriptTags,
+        }) }}
+
+        <hr>
+
+        <h2>{{ 'Cookie'|t('cookie-consent-manager') }}</h2>
+
+        {{ forms.textField({
+            first: true,
+            label: 'Cookie name'|t('cookie-consent-manager'),
+            instructions: 'Name of the cookie used to store consents'|t('cookie-consent-manager'),
+            name: 'cookieName',
+            value: settings.cookieName,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Cookie domain'|t('cookie-consent-manager'),
+            instructions: 'Set custom cookie domain. Leave empty to receive automatically.'|t('cookie-consent-manager'),
+            name: 'cookieDomain',
+            placeholder: craft.app.request.serverName,
+            value: settings.cookieDomain,
+            size: 30,
+        }) }}
+
+        {{ forms.textField({
+            label: 'Cookie expiration'|t('cookie-consent-manager'),
+            instructions: 'Number of days before the cookie expires (Default: 182 days = 6 months)'|t('cookie-consent-manager'),
+            name: 'cookieExpiration',
+            value: settings.cookieExpiration,
+            inputmode: 'numeric',
+            size: 4,
+        }) }}
+
+        {{ forms.selectField({
+            label: 'Cookie SameSite attribute'|t('cookie-consent-manager'),
+            instructions: 'Controls whether or not a cookie is sent with cross-site requests, providing some protection against cross-site request forgery (CSRF) attacks.'|t('cookie-consent-manager'),
+            name: 'cookieSameSite',
+            value: settings.cookieSameSite,
+            options: {
+                'Lax': 'Lax'|t('cookie-consent-manager'),
+                'Strict': 'Strict'|t('cookie-consent-manager'),
+                'None': 'None'|t('cookie-consent-manager'),
+            },
+        }) }}
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}

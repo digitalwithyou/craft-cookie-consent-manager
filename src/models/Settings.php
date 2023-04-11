@@ -16,68 +16,83 @@ class Settings extends Model
     // Where to manage content
     public bool $manageContentAsTranslations = false;
 
+    // Root (parent) element where the modal will be appended as a last child.
+    // If null, the plugin will try to find the <body> tag.
+    public ?string $root = null;
+
     // Accepted values:
     // - opt-in: scripts will not run unless consent is given (gdpr compliant)
     // - opt-out: scripts — that have categories set as enabled by default — will run without consent, until an explicit choice is made
     public string $mode = 'opt-in';
 
-    // Number of milliseconds before showing the consent-modal
-    public int $delay = 0;
+    // Automatically show the consent modal if consent is not valid.
+    public bool $autoShow = true;
 
-    // Enable if you want to block page navigation until user action
-    public bool $forceConsent = false;
+    // Intercepts all <script> tags with a data-category attribute, and enables them based on the accepted categories. Check out the scripts management section for details and examples.
+    public bool $manageScriptTags = false;
 
-    // Enable if you want to automatically delete cookies when user opts-out of a specific category inside cookie settings
-    public bool $autoclearCookies = false;
+    // Clears cookies when user rejects a specific category. It requires a valid autoClear array.
+    public bool $autoClearCookies = true;
 
-    // Enable if you want to easily manage existing <script> tags.
-    public bool $pageScripts = false;
-
-    // Automatically add the cookie consent banner
-    public bool $autorun = true;
-
-    // Enable if you want to remove the html cookie tables (but still want to make use of autoclear_cookies)
-    public bool $removeCookieTables = false;
-
-    // Disable if you want the plugin to run when a bot/crawler/webdriver is detected
+    // Stops the plugin's execution when a bot/crawler is detected, to prevent them from indexing the modal's content.
     public bool $hideFromBots = true;
+
+    // Creates a dark overlay and blocks the page scroll until consent is expressed.
+    public bool $disablePageInteraction = false;
+
+    // Delays the generation of the modal's markup until they're about to become visible, to improve the TTI score. You can detect when a modal is ready/created via the onModalReady callback.
+    public bool $lazyHtmlGeneration = true;
+
+
+    /**
+     * Cookie
+     */
+
+    // Name of the cookie
+    public string $cookieName = 'ccm_cookie';
+
+    // Restrict cookie to domain. retrieved automatically if null.
+    public ?string $cookieDomain = null;
+
+    // Restrict cookie to path
+    public string $cookiePath = '/';
+
+    // Number of days before the cookie expires (182 days = 6 months)
+    public int $cookieExpiration = 182;
+
+    // SameSite attribute
+    public string $cookieSameSite = 'Lax';
 
 
     /**
      * Layout: Consent & Settings modal
      */
 
-    // Layout of the consent modal (box, cloud, bar)
-    public string $layout = 'box';
+    // Layout of the consent modal (box wide, box inline, cloud, bar)
+    public string $layout = 'box inline';
 
     // Position of the consent modal (bottom/middle/top + left/right/center)
-    public string $position = 'bottom center';
+    public string $position = 'bottom left';
 
-    // Transition effect of the consent modal ('', slide, zoom)
-    public string $transition = '';
+    // Enable to invert buttons order
+    public bool $flipButtons = false;
 
-    // Enable to invert buttons
-    public bool $swapButtons = false;
+    // Equal weight buttons in consent modal
+    public bool $equalWeightButtons = false;
 
-    // Layout of the settings modal (box, bar)
-    public string $settingsModalLayout = 'box';
+    // Show preferences button in consent modal
+    public bool $showPreferencesButton = true;
 
-    // Transition of the settings modal ('', slide, zoom)
-    public string $settingsModalTransition = '';
+    // Layout of the preferences modal (box, bar wide)
+    public string $preferencesModalLayout = 'box';
 
-    /**
-     * Cookies
-     */
+    // Position of the preferences modal (left / right), only for bar wide layout
+    public string $preferencesModalPosition = '';
 
-     // Number of days before the cookie expires (182 days = 6 months)
-    public int $cookieExpiration = 182;
+    // Flip buttons in preferences modal
+    public bool $preferencesModalFlipButtons = false;
 
-    // Specify if you want to set a different number of days - before the cookie expires - when the user accepts only the necessary categories
-    public ?int $cookieNecessaryOnlyExpiration = null;
+    // Equal weight buttons in preferences modal
+    public bool $preferencesModalEqualWeightButtons = false;
 
-    // SameSite attribute
-    public string $cookieSameSite = 'Lax';
-
-    // Enable if you want the value of the cookie to be rfc compliant
-    public bool $useRfcCookie = false;
 }

@@ -15,7 +15,7 @@ class Renderer extends Component
 {
     private ?Site $_currentSite = null;
 
-    public function renderConfig()
+    public function renderConfig(): void
     {
         $view = Craft::$app->getView();
         $settings = Plugin::getInstance()->getSettings();
@@ -27,91 +27,107 @@ class Renderer extends Component
         $content = Plugin::getInstance()->content;
 
         $config = [
-            'current_lang' => $currentLang,
-            'delay' => $settings->delay,
             'mode' => $settings->mode,
-            'cookie_expiration' => $settings->cookieExpiration,
-            'cookie_necessary_only_expiration' => $settings->cookieNecessaryOnlyExpiration,
-            'cookie_samesite' => $settings->cookieSameSite,
-            'use_rfc_cookie' => $settings->useRfcCookie,
-            'force_consent' => $settings->forceConsent,
-            'autoclear_cookies' => $settings->autoclearCookies,
-            'page_scripts' => $settings->pageScripts,
-            'remove_cookie_tables' => $settings->removeCookieTables,
-            'hide_from_bots' => $settings->hideFromBots,
-            'autorun' => $settings->autorun,
-            'languages' => [
-                $currentLang => [
-                    'consent_modal' =>  [
-                        'title' => $content->get('consentModalHeading', $siteId),
-                        'description' => $this->_parseConsentModalText($content, $siteId),
-                        'primary_btn' => [
-                            'text' => $content->get('consentModalAcceptButton', $siteId),
-                            'role' => 'accept_all',
+            'autoShow' => $settings->autoShow,
+            'manageScriptTags' => $settings->manageScriptTags,
+            'autoClearCookies' => $settings->autoClearCookies,
+            'hideFromBots' => $settings->hideFromBots,
+            'disablePageInteraction' => $settings->disablePageInteraction,
+            'lazyHtmlGeneration' => $settings->lazyHtmlGeneration,
+
+            'categories' => $this->_getCategories($content, $siteId),
+
+            'cookie' => [
+                'name' => $settings->cookieName,
+                'domain' => $settings->cookieDomain,
+                'path' => $settings->cookiePath,
+                'expiresAfterDays' => $settings->cookieExpiration,
+                'sameSite' => $settings->cookieSameSite,
+            ],
+
+            'language' => [
+                'default' => $currentLang,
+
+                'translations' => [
+                    $currentLang => [
+                        'consentModal' =>  [
+                            'label' => $content->get('consentModalLabel', $siteId),
+                            'title' => $content->get('consentModalTitle', $siteId),
+                            'description' => $this->_parseConsentModalText($content, $siteId),
+                            'acceptAllBtn' => $content->get('consentModalAcceptAllButton', $siteId),
+                            'acceptNecessaryBtn' => $content->get('consentModalAcceptNecessaryButton', $siteId),
+                            'showPreferencesBtn' => $settings->showPreferencesButton ? $content->get('consentModalPreferencesLabel', $siteId) : null,
+                            'footer' => $content->get('consentModalFooter', $siteId),
                         ],
-                        'secondary_btn' => [
-                            'text' => $content->get('consentModalRejectButton', $siteId),
-                            'role' => 'accept_necessary',
+                        'preferencesModal' => [
+                            'title' => $content->get('preferencesModalTitle', $siteId),
+                            'savePreferencesBtn' => $content->get('preferencesModalSavePreferencesButton', $siteId),
+                            'acceptAllBtn' => $content->get('preferencesModalAcceptAllButton', $siteId),
+                            'acceptNecessaryBtn' => $content->get('preferencesModalAcceptNecessaryButton', $siteId),
+                            'closeIconLabel' => $content->get('preferencesModalCloseIconLabel', $siteId),
+                            'sections' => $this->_getSettingsBlocks($content, $siteId),
                         ],
-                    ],
-                    'settings_modal' => [
-                        'title' => $content->get('settingsModalHeading', $siteId),
-                        'save_settings_btn' => $content->get('settingsModalSaveSettingsButton', $siteId),
-                        'accept_all_btn' => $content->get('settingsModalAcceptAllButton', $siteId),
-                        'reject_all_btn' => $content->get('settingsModalRejectAllButton', $siteId),
-                        'close_btn_label' => $content->get('settingsModalCloseButton', $siteId),
-                        'cookie_table_headers' => [
-                            ['col1' => $content->get('settingsModalCookieName', $siteId)],
-                            ['col2' => $content->get('settingsModalCookieDomain', $siteId)],
-                            ['col3' => $content->get('settingsModalCookieExpiration', $siteId)],
-                            ['col4' => $content->get('settingsModalCookieDescription', $siteId)],
-                        ],
-                        'blocks' => $this->_getSettingsBlocks($content, $siteId),
                     ],
                 ],
             ],
-            'gui_options' => [
-                'consent_modal' => [
+
+            'guiOptions' => [
+                'consentModal' => [
                     'layout' => $settings->layout,
                     'position' => $settings->position,
-                    'transition' => $settings->transition,
-                    'swap_buttons' => $settings->swapButtons,
+                    'flipButtons' => $settings->flipButtons,
+                    'equalWeightButtons' => $settings->equalWeightButtons,
                 ],
-                'settings_modal' => [
-                    'layout' => $settings->settingsModalLayout,
-                    'transition' => $settings->settingsModalTransition,
+                'preferencesModal' => [
+                    'layout' => $settings->preferencesModalLayout,
+                    'position' => $settings->preferencesModalPosition,
+                    'flipButtons' => $settings->preferencesModalFlipButtons,
+                    'equalWeightButtons' => $settings->preferencesModalEqualWeightButtons,
                 ],
             ],
         ];
 
+        if ($settings->root) {
+            $config['root'] = $settings->root;
+        }
+
+        ray($config);
+
         $config = Json::encode($config);
 
-        $view->registerJs("window.cc = initCookieConsent(); window.cc.run({$config}); window.dispatchEvent(new Event('ccmInitiated'));", View::POS_END);
+        $view->registerJs("CookieConsent.run({$config});", View::POS_END);
     }
 
     private function _getSettingsBlocks($content, $siteId): array
     {
+        $enabledCategories = Plugin::getInstance()->get('categories')->getAllForSite($this->_currentSite->id, true);
         $blocks = [];
 
-        $settingsModalHeaderTitle = $content->get('settingsModalHeaderTitle', $siteId);
-        $settingsModalHeaderText = $content->get('settingsModalHeaderText ', $siteId);
+        $preferencesModalHeaderTitle = $content->get('preferencesModalHeaderTitle', $siteId);
+        $preferencesModalHeaderText = $content->get('preferencesModalHeaderText', $siteId);
 
-        if (!empty($settingsModalHeaderTitle) ||!empty($settingsModalHeaderText) ) {
+        if (!empty($preferencesModalHeaderTitle) ||!empty($preferencesModalHeaderText) ) {
             $blocks[] = [
-                'title' => $settingsModalHeaderTitle,
-                'description' => $settingsModalHeaderText,
+                'title' => $preferencesModalHeaderTitle,
+                'description' => $preferencesModalHeaderText,
             ];
         }
 
-        $blocks = array_merge($blocks, $this->_getCategories());
-
-        $settingsModalFooterTitle = $content->get('settingsModalFooterTitle', $siteId);
-        $settingsModalFooterText = $content->get('settingsModalFooterText ', $siteId);
-
-        if (!empty($settingsModalFooterTitle) ||!empty($settingsModalFooterText) ) {
+        foreach ($enabledCategories as $category) {
             $blocks[] = [
-                'title' => $settingsModalFooterTitle,
-                'description' => $settingsModalFooterText,
+                'title' => $category->name,
+                'description' => $category->description,
+                'linkedCategory' => $category->uid,
+            ];
+        }
+
+        $preferencesModalFooterTitle = $content->get('preferencesModalFooterTitle', $siteId);
+        $preferencesModalFooterText = $content->get('preferencesModalFooterText', $siteId);
+
+        if (!empty($preferencesModalFooterTitle) ||!empty($preferencesModalFooterText) ) {
+            $blocks[] = [
+                'title' => $preferencesModalFooterTitle,
+                'description' => $preferencesModalFooterText,
             ];
         }
 
@@ -124,13 +140,9 @@ class Renderer extends Component
         $data = [];
 
         foreach ($enabledCategories as $category) {
-            $data[] = [
-                'title' => $category->name,
-                'description' => $category->description,
-                'toggle' => [
-                    'enabled' => $category->default,
-                    'readonly' => $category->required,
-                ],
+            $data[$category->uid] = [
+                'enabled' => $category->default,
+                'readOnly' => $category->required,
             ];
         }
 
@@ -139,12 +151,12 @@ class Renderer extends Component
 
     private function _parseConsentModalText($content, $siteId): string
     {
-        $settingsLabel = $content->get('consentModalSettingsLabel', $siteId);
-        $text = $content->get('consentModalText', $siteId);
+        $buttonLabel = $content->get('consentModalPreferencesLabel', $siteId);
+        $text = $content->get('consentModalDescription', $siteId);
 
         return str_replace(
-            '#settings#',
-            '<button type="button" data-cc="c-settings" class="cc-link">'.$settingsLabel.'</button>',
+            '{preferences}',
+            '<button type="button" data-cc="show-preferencesModal">'.$buttonLabel.'</button>',
             $text
         );
     }

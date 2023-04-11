@@ -11,7 +11,7 @@ module.exports = getConfig({
                 patterns: [
                     {
                         from: require.resolve(
-                            'vanilla-cookieconsent/dist/cookieconsent.js'
+                            'vanilla-cookieconsent/dist/cookieconsent.umd.js'
                         ),
                     },
                     {

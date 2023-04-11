@@ -13,77 +13,97 @@
         <h2 class="first">{{ 'Consent modal'|t }}</h2>
 
         {{ forms.radioGroupField({
+            first: true,
             label: 'Layout'|t('cookie-consent-manager'),
             name: 'layout',
             options: [
-                { value: 'box', label: 'Box'|t('cookie-consent-manager') },
+                { value: 'box wide', label: 'Box (Wide)'|t('cookie-consent-manager') },
+                { value: 'box inline', label: 'Box (Inline)'|t('cookie-consent-manager') },
                 { value: 'cloud', label: 'Cloud'|t('cookie-consent-manager') },
                 { value: 'bar', label: 'Bar'|t('cookie-consent-manager') },
             ],
             value: settings.layout,
         }) }}
 
-        {{ forms.radioGroupField({
-            label: 'Position'|t('cookie-consent-manager'),
-            name: 'position',
-            options: [
-                { value: 'top left', label: 'Top - Left'|t('cookie-consent-manager') },
-                { value: 'top center', label: 'Top - Center'|t('cookie-consent-manager') },
-                { value: 'top right', label: 'Top - Right'|t('cookie-consent-manager') },
-                { value: 'middle left', label: 'Middle - Left'|t('cookie-consent-manager') },
-                { value: 'middle center', label: 'Middle - Center'|t('cookie-consent-manager') },
-                { value: 'middle right', label: 'Middle - Right'|t('cookie-consent-manager') },
-                { value: 'bottom left', label: 'Bottom - Left'|t('cookie-consent-manager') },
-                { value: 'bottom center', label: 'Bottom - Center'|t('cookie-consent-manager') },
-                { value: 'bottom right', label: 'Bottom - Right'|t('cookie-consent-manager') },
-            ],
-            value: settings.position,
-        }) }}
+        <div id="consentModalPosition">
+            {{ forms.radioGroupField({
+                label: 'Position'|t('cookie-consent-manager'),
+                name: 'position',
+                options: [
+                    { value: 'top left', label: 'Top - Left'|t('cookie-consent-manager') },
+                    { value: 'top center', label: 'Top - Center'|t('cookie-consent-manager') },
+                    { value: 'top right', label: 'Top - Right'|t('cookie-consent-manager') },
+                    { value: 'middle left', label: 'Middle - Left'|t('cookie-consent-manager') },
+                    { value: 'middle center', label: 'Middle - Center'|t('cookie-consent-manager') },
+                    { value: 'middle right', label: 'Middle - Right'|t('cookie-consent-manager') },
+                    { value: 'bottom left', label: 'Bottom - Left'|t('cookie-consent-manager') },
+                    { value: 'bottom center', label: 'Bottom - Center'|t('cookie-consent-manager') },
+                    { value: 'bottom right', label: 'Bottom - Right'|t('cookie-consent-manager') },
+                ],
+                value: settings.position,
+            }) }}
+        </div>
 
-        {{ forms.radioGroupField({
-            label: 'Transition'|t('cookie-consent-manager'),
-            name: 'transition',
-            options: [
-                { value: '', label: 'None'|t('cookie-consent-manager') },
-                { value: 'slide', label: 'Slide'|t('cookie-consent-manager') },
-                { value: 'zoom', label: 'Zoom'|t('cookie-consent-manager') },
-            ],
-            value: settings.transition,
+        {{ forms.lightswitchField({
+            label: 'Flip buttons'|t('cookie-consent-manager'),
+            instructions: 'Enable to invert buttons'|t('cookie-consent-manager'),
+            name: 'flipButtons',
+            on: settings.flipButtons,
         }) }}
 
         {{ forms.lightswitchField({
-            label: 'Swap buttons'|t('cookie-consent-manager'),
-            instructions: 'Enable to invert buttons'|t('cookie-consent-manager'),
-            name: 'swapButtons',
-            on: settings.swapButtons,
+            label: 'Equal weight buttons'|t('cookie-consent-manager'),
+            instructions: 'Same size for all displayed buttons'|t('cookie-consent-manager'),
+            name: 'equalWeightButtons',
+            on: settings.equalWeightButtons,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Show preferences button'|t('cookie-consent-manager'),
+            instructions: 'When hidden, add a preferences link via `{preferences}` in the description.'|t('cookie-consent-manager'),
+            name: 'showPreferencesButton',
+            on: settings.showPreferencesButton,
         }) }}
 
         <hr>
 
-        <h2>{{ 'Settings modal'|t }}</h2>
+        <h2>{{ 'Preferences modal'|t }}</h2>
 
         {{ forms.radioGroupField({
+            first: true,
             label: 'Layout'|t('cookie-consent-manager'),
-            name: 'settingsModalLayout',
+            name: 'preferencesModalLayout',
             options: [
                 { value: 'box', label: 'Box'|t('cookie-consent-manager') },
-                { value: 'bar', label: 'Bar'|t('cookie-consent-manager') },
+                { value: 'bar', label: 'Bar (Inline)'|t('cookie-consent-manager') },
+                { value: 'bar wide', label: 'Bar (Wide)'|t('cookie-consent-manager') },
             ],
-            value: settings.settingsModalLayout,
+            value: settings.preferencesModalLayout,
         }) }}
 
         {{ forms.radioGroupField({
-            label: 'Transition'|t('cookie-consent-manager'),
-            name: 'settingsModalTransition',
+            label: 'Position'|t('cookie-consent-manager'),
+            name: 'preferencesModalPosition',
             options: [
-                { value: '', label: 'None'|t('cookie-consent-manager') },
-                { value: 'slide', label: 'Slide'|t('cookie-consent-manager') },
-                { value: 'zoom', label: 'Zoom'|t('cookie-consent-manager') },
+                { value: 'left', label: 'Left'|t('cookie-consent-manager') },
+                { value: 'right', label: 'Right'|t('cookie-consent-manager') },
             ],
-            value: settings.settingsModalTransition,
+            value: settings.preferencesModalPosition,
         }) }}
 
-        <hr>
+        {{ forms.lightswitchField({
+            label: 'Flip buttons'|t('cookie-consent-manager'),
+            instructions: 'Enable to invert buttons'|t('cookie-consent-manager'),
+            name: 'preferencesModalFlipButtons',
+            on: settings.preferencesModalFlipButtons,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Equal weight buttons'|t('cookie-consent-manager'),
+            instructions: 'Same size for all displayed buttons'|t('cookie-consent-manager'),
+            name: 'preferencesModalEqualWeightButtons',
+            on: settings.preferencesModalEqualWeightButtons,
+        }) }}
 
         <div class="buttons">
             {{ forms.submitButton({label: 'Save'|t('app')}) }}
@@ -92,3 +112,29 @@
     </form>
 
 {% endblock %}
+
+{% js %}
+    function toggleConsentModalPosition() {
+        var consentModalLayout = $('input[name=layout]:checked').val();
+        var showPosition = consentModalLayout !== 'bar';
+        $('#consentModalPosition').toggle(showPosition);
+    }
+
+    toggleConsentModalPosition();
+
+    $('input[name=layout]').on('change', function() {
+        toggleConsentModalPosition();
+    });
+
+    function togglePreferencesModalPosition() {
+        var preferencesModalLayout = $('input[name=preferencesModalLayout]:checked').val();
+        var showPosition = preferencesModalLayout === 'bar';
+        $('input[name=preferencesModalPosition]').closest('.field').toggle(showPosition);
+    }
+
+    togglePreferencesModalPosition();
+
+    $('input[name=preferencesModalLayout]').on('change', function() {
+        togglePreferencesModalPosition();
+    });
+{% endjs %}
