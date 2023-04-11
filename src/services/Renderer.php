@@ -91,8 +91,6 @@ class Renderer extends Component
             $config['root'] = $settings->root;
         }
 
-        ray($config);
-
         $config = Json::encode($config);
 
         $view->registerJs("CookieConsent.run({$config});", View::POS_END);
