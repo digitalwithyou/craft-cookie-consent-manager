@@ -115,26 +115,9 @@ class Content extends Component
     {
         $site = Craft::$app->getSites()->getSiteById($siteId);
 
-        $data = [
-            'consentModalLabel',
-            'consentModalTitle',
-            'consentModalDescription',
-            'consentModalPreferencesLabel',
-            'consentModalAcceptAllButton',
-            'consentModalAcceptNecessaryButton',
-            'consentModalFooter',
-            'preferencesModalTitle',
-            'preferencesModalAcceptAllButton',
-            'preferencesModalAcceptNecessaryButton',
-            'preferencesModalSavePreferencesButton',
-            'preferencesModalCloseIconLabel',
-            'preferencesModalHeaderTitle',
-            'preferencesModalHeaderText',
-            'preferencesModalFooterTitle',
-            'preferencesModalFooterText',
-        ];
+        $data = include $this->_getTranslationPath();
 
-        foreach ($data as $key) {
+        foreach ($data as $key => $value) {
             $value = Craft::t('cookie-banner', $key, [], $site->language);
 
             $content = new ContentRecord();
@@ -150,5 +133,17 @@ class Content extends Component
         Craft::$app->getDb()->createCommand()
             ->delete(ContentRecord::tableName(), ['siteId' => $siteId])
             ->execute();
+    }
+
+    private function _getTranslationPath($language = 'en'): string
+    {
+        return Plugin::getInstance()->getBasePath()
+            .DIRECTORY_SEPARATOR
+            .'translations'
+            .DIRECTORY_SEPARATOR
+            .$language
+            .DIRECTORY_SEPARATOR
+            .'cookie-banner.php'
+        ;
     }
 }
