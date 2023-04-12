@@ -7,102 +7,130 @@ use craft\helpers\Json;
 use craft\helpers\Template;
 use craft\models\Site;
 use craft\web\View;
-use dwy\CookieConsentManager\Plugin;
 use dwy\CookieConsentManager\helpers\I18N as I18NHelper;
+use dwy\CookieConsentManager\models\Settings;
+use dwy\CookieConsentManager\Plugin;
+use dwy\CookieConsentManager\services\Content;
 use yii\base\Component;
 
 class Renderer extends Component
 {
+    private ?Content $_contentService = null;
+    private ?Settings $_settings = null;
     private ?Site $_currentSite = null;
 
     public function renderConfig(): void
     {
-        $view = Craft::$app->getView();
-        $settings = Plugin::getInstance()->getSettings();
-
+        $this->_contentService = Plugin::getInstance()->get('content');
+        $this->_settings = Plugin::getInstance()->getSettings();
         $this->_currentSite = Craft::$app->getSites()->getCurrentSite();
-        $currentLang = $this->_currentSite->language;
-        $siteId = $this->_currentSite->id;
-
-        $content = Plugin::getInstance()->content;
 
         $config = [
-            'mode' => $settings->mode,
-            'autoShow' => $settings->autoShow,
-            'manageScriptTags' => $settings->manageScriptTags,
-            'autoClearCookies' => $settings->autoClearCookies,
-            'hideFromBots' => $settings->hideFromBots,
-            'disablePageInteraction' => $settings->disablePageInteraction,
-            'lazyHtmlGeneration' => $settings->lazyHtmlGeneration,
+            'mode' => $this->_settings->mode,
+            'autoShow' => $this->_settings->autoShow,
+            'manageScriptTags' => $this->_settings->manageScriptTags,
+            'autoClearCookies' => $this->_settings->autoClearCookies,
+            'hideFromBots' => $this->_settings->hideFromBots,
+            'disablePageInteraction' => $this->_settings->disablePageInteraction,
+            'lazyHtmlGeneration' => $this->_settings->lazyHtmlGeneration,
 
-            'categories' => $this->_getCategories($content, $siteId),
+            'categories' => $this->_buildCategories(),
 
             'cookie' => [
-                'name' => $settings->cookieName,
-                'domain' => $settings->cookieDomain,
-                'path' => $settings->cookiePath,
-                'expiresAfterDays' => $settings->cookieExpiration,
-                'sameSite' => $settings->cookieSameSite,
+                'name' => $this->_settings->cookieName,
+                'domain' => $this->_settings->cookieDomain,
+                'path' => $this->_settings->cookiePath,
+                'expiresAfterDays' => $this->_settings->cookieExpiration,
+                'sameSite' => $this->_settings->cookieSameSite,
             ],
 
-            'language' => [
-                'default' => $currentLang,
-
-                'translations' => [
-                    $currentLang => [
-                        'consentModal' =>  [
-                            'label' => $content->get('consentModalLabel', $siteId),
-                            'title' => $content->get('consentModalTitle', $siteId),
-                            'description' => $this->_parseConsentModalText($content, $siteId),
-                            'acceptAllBtn' => $content->get('consentModalAcceptAllButton', $siteId),
-                            'acceptNecessaryBtn' => $content->get('consentModalAcceptNecessaryButton', $siteId),
-                            'showPreferencesBtn' => $settings->showPreferencesButton ? $content->get('consentModalPreferencesLabel', $siteId) : null,
-                            'footer' => $content->get('consentModalFooter', $siteId),
-                        ],
-                        'preferencesModal' => [
-                            'title' => $content->get('preferencesModalTitle', $siteId),
-                            'savePreferencesBtn' => $content->get('preferencesModalSavePreferencesButton', $siteId),
-                            'acceptAllBtn' => $content->get('preferencesModalAcceptAllButton', $siteId),
-                            'acceptNecessaryBtn' => $content->get('preferencesModalAcceptNecessaryButton', $siteId),
-                            'closeIconLabel' => $content->get('preferencesModalCloseIconLabel', $siteId),
-                            'sections' => $this->_getSettingsBlocks($content, $siteId),
-                        ],
-                    ],
-                ],
-            ],
+            'language' => $this->_buildLanguage(),
 
             'guiOptions' => [
                 'consentModal' => [
-                    'layout' => $settings->layout,
-                    'position' => $settings->position,
-                    'flipButtons' => $settings->flipButtons,
-                    'equalWeightButtons' => $settings->equalWeightButtons,
+                    'layout' => $this->_settings->layout,
+                    'position' => $this->_settings->position,
+                    'flipButtons' => $this->_settings->flipButtons,
+                    'equalWeightButtons' => $this->_settings->equalWeightButtons,
                 ],
                 'preferencesModal' => [
-                    'layout' => $settings->preferencesModalLayout,
-                    'position' => $settings->preferencesModalPosition,
-                    'flipButtons' => $settings->preferencesModalFlipButtons,
-                    'equalWeightButtons' => $settings->preferencesModalEqualWeightButtons,
+                    'layout' => $this->_settings->preferencesModalLayout,
+                    'position' => $this->_settings->preferencesModalPosition,
+                    'flipButtons' => $this->_settings->preferencesModalFlipButtons,
+                    'equalWeightButtons' => $this->_settings->preferencesModalEqualWeightButtons,
                 ],
             ],
         ];
 
-        if ($settings->root) {
-            $config['root'] = $settings->root;
+        if ($this->_settings->root) {
+            $config['root'] = $this->_settings->root;
         }
 
         $config = Json::encode($config);
 
-        $view->registerJs("CookieConsent.run({$config});", View::POS_END);
+        Craft::$app->getView()->registerJs("CookieConsent.run({$config});", View::POS_END);
     }
 
-    private function _getSettingsBlocks($content, $siteId): array
+    private function _buildCategories(): array
+    {
+        $enabledCategories = Plugin::getInstance()->get('categories')->getAllForSite($this->_currentSite->id, true);
+        $data = [];
+
+        foreach ($enabledCategories as $category) {
+            $data[$category->uid] = [
+                'enabled' => $category->default,
+                'readOnly' => $category->required,
+            ];
+        }
+
+        return $data;
+    }
+
+    private function _buildLanguage(): array
+    {
+        $siteId = $this->_currentSite->id;
+        $language = $this->_currentSite->language;
+
+        $data = [
+            'default' => $language,
+
+            'translations' => [
+                $language => [
+                    'consentModal' =>  [
+                        'label' => $this->_contentService->get('consentModalLabel', $siteId),
+                        'title' => $this->_contentService->get('consentModalTitle', $siteId),
+                        'description' => $this->_parseConsentModalDescription(),
+                        'acceptAllBtn' => $this->_contentService->get('consentModalAcceptAllButton', $siteId),
+                        'acceptNecessaryBtn' => $this->_contentService->get('consentModalAcceptNecessaryButton', $siteId),
+                        'showPreferencesBtn' => $this->_settings->showPreferencesButton ? $this->_contentService->get('consentModalPreferencesLabel', $siteId) : null,
+                        'footer' => $this->_contentService->get('consentModalFooter', $siteId),
+                    ],
+                    'preferencesModal' => [
+                        'title' => $this->_contentService->get('preferencesModalTitle', $siteId),
+                        'savePreferencesBtn' => $this->_contentService->get('preferencesModalSavePreferencesButton', $siteId),
+                        'acceptAllBtn' => $this->_contentService->get('preferencesModalAcceptAllButton', $siteId),
+                        'acceptNecessaryBtn' => $this->_contentService->get('preferencesModalAcceptNecessaryButton', $siteId),
+                        'closeIconLabel' => $this->_contentService->get('preferencesModalCloseIconLabel', $siteId),
+                        'sections' => $this->_buildPreferencesModalSections(),
+                    ],
+                ],
+            ],
+        ];
+
+        if ($this->_currentSite->getLocale()->getOrientation() == 'rtl') {
+            $data['rtl'] = [$language];
+        }
+
+        return $data;
+    }
+
+    private function _buildPreferencesModalSections(): array
     {
         $enabledCategories = Plugin::getInstance()->get('categories')->getAllForSite($this->_currentSite->id, true);
         $blocks = [];
 
-        $preferencesModalHeaderTitle = $content->get('preferencesModalHeaderTitle', $siteId);
-        $preferencesModalHeaderText = $content->get('preferencesModalHeaderText', $siteId);
+        $preferencesModalHeaderTitle = $this->_contentService->get('preferencesModalHeaderTitle', $this->_currentSite->id);
+        $preferencesModalHeaderText = $this->_contentService->get('preferencesModalHeaderText', $this->_currentSite->id);
 
         if (!empty($preferencesModalHeaderTitle) ||!empty($preferencesModalHeaderText) ) {
             $blocks[] = [
@@ -119,8 +147,8 @@ class Renderer extends Component
             ];
         }
 
-        $preferencesModalFooterTitle = $content->get('preferencesModalFooterTitle', $siteId);
-        $preferencesModalFooterText = $content->get('preferencesModalFooterText', $siteId);
+        $preferencesModalFooterTitle = $this->_contentService->get('preferencesModalFooterTitle', $this->_currentSite->id);
+        $preferencesModalFooterText = $this->_contentService->get('preferencesModalFooterText', $this->_currentSite->id);
 
         if (!empty($preferencesModalFooterTitle) ||!empty($preferencesModalFooterText) ) {
             $blocks[] = [
@@ -132,25 +160,10 @@ class Renderer extends Component
         return $blocks;
     }
 
-    private function _getCategories(): array
+    private function _parseConsentModalDescription(): string
     {
-        $enabledCategories = Plugin::getInstance()->get('categories')->getAllForSite($this->_currentSite->id, true);
-        $data = [];
-
-        foreach ($enabledCategories as $category) {
-            $data[$category->uid] = [
-                'enabled' => $category->default,
-                'readOnly' => $category->required,
-            ];
-        }
-
-        return $data;
-    }
-
-    private function _parseConsentModalText($content, $siteId): string
-    {
-        $buttonLabel = $content->get('consentModalPreferencesLabel', $siteId);
-        $text = $content->get('consentModalDescription', $siteId);
+        $buttonLabel = $this->_contentService->get('consentModalPreferencesLabel', $this->_currentSite->id);
+        $text = $this->_contentService->get('consentModalDescription', $this->_currentSite->id);
 
         return str_replace(
             '{preferences}',
