@@ -117,7 +117,7 @@ class Renderer extends Component
             ],
         ];
 
-        if (!is_empty($this->_settings->autoDetectLanguage)) {
+        if (!empty($this->_settings->autoDetectLanguage)) {
             $data['autoDetect'] = $this->_settings->autoDetectLanguage;
         }
 
