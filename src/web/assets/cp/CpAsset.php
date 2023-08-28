@@ -1,6 +1,6 @@
 <?php
 
-namespace dwy\CookieConsentManager\web\assets\banner;
+namespace dwy\CookieConsentManager\web\assets\cp;
 
 use craft\web\AssetBundle;
 
