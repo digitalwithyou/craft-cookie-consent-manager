@@ -50,6 +50,18 @@
             on: settings.disablePageInteraction,
         }) }}
 
+        {{ forms.selectField({
+            label: 'Language autodetect'|t('cookie-consent-manager'),
+            instructions: 'Set the current language dynamically.'|t('cookie-consent-manager'),
+            name: 'autoDetectLanguage',
+            value: settings.autoDetectLanguage,
+            options: {
+                '': 'Off'|t('cookie-consent-manager'),
+                'document': 'Document'|t('cookie-consent-manager'),
+                'browser': 'Browser'|t('cookie-consent-manager'),
+            },
+        }) }}
+
         <div class="buttons">
             {{ forms.submitButton({label: 'Save'|t('app')}) }}
         </div>

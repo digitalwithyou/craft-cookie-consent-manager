@@ -43,6 +43,12 @@ class Settings extends Model
     // Delays the generation of the modal's markup until they're about to become visible, to improve the TTI score. You can detect when a modal is ready/created via the onModalReady callback.
     public bool $lazyHtmlGeneration = true;
 
+    // Set the language dynamically
+    // - '': the default language is used
+    // - document: retrieve language from the `lang` attribute (e.g. `<html lang="en-US">`)
+    // - browser: retrieve the user's browser language via `navigator.language`
+    public string $autoDetectLanguage = 'document';
+
 
     /**
      * Cookie

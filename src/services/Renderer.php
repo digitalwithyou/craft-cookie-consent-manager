@@ -117,6 +117,10 @@ class Renderer extends Component
             ],
         ];
 
+        if (!is_empty($this->_settings->autoDetectLanguage)) {
+            $data['autoDetect'] = $this->_settings->autoDetectLanguage;
+        }
+
         if ($this->_currentSite->getLocale()->getOrientation() == 'rtl') {
             $data['rtl'] = [$language];
         }

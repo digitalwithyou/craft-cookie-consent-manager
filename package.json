@@ -12,6 +12,6 @@
   "devDependencies": {
     "@craftcms/webpack": "^1.1.0",
     "prettier": "^2.8.4",
-    "vanilla-cookieconsent": "^3.0.0-rc.16"
+    "vanilla-cookieconsent": "github:orestbida/cookieconsent#v3.0-beta"
   }
 }
