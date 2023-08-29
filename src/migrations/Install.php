@@ -56,7 +56,7 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'siteId' => $this->integer()->notNull(),
             'key' => $this->string()->notNull(),
-            'value' => $this->string()->notNull(),
+            'value' => $this->text(),
         ]);
     }
 
