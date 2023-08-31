@@ -1,6 +1,6 @@
 <?php
 
-namespace dwy\CookieConsentManager\controllers;
+namespace dwy\CookieConsentManager\controllers\cp;
 
 use Craft;
 use craft\helpers\Json;

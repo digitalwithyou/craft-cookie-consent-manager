@@ -4,6 +4,7 @@ namespace dwy\CookieConsentManager\services;
 
 use Craft;
 use craft\helpers\Json;
+use craft\helpers\UrlHelper;
 use craft\helpers\Template;
 use craft\models\Site;
 use craft\web\View;
@@ -19,12 +20,15 @@ class Renderer extends Component
     private ?Settings $_settings = null;
     private ?Site $_currentSite = null;
 
-    public function renderConfig(): void
+    public function __construct()
     {
         $this->_contentService = Plugin::getInstance()->get('content');
         $this->_settings = Plugin::getInstance()->getSettings();
         $this->_currentSite = Craft::$app->getSites()->getCurrentSite();
+    }
 
+    public function renderConfig(): void
+    {
         $config = [
             'mode' => $this->_settings->mode,
             'autoShow' => $this->_settings->autoShow,
@@ -44,7 +48,7 @@ class Renderer extends Component
                 'sameSite' => $this->_settings->cookieSameSite,
             ],
 
-            'language' => $this->_buildLanguage(),
+            'language' => $this->_buildLanguages(),
 
             'guiOptions' => [
                 'consentModal' => [
@@ -86,7 +90,7 @@ class Renderer extends Component
         return $data;
     }
 
-    private function _buildLanguage(): array
+    private function _buildLanguages(): array
     {
         $siteId = $this->_currentSite->id;
         $language = $this->_currentSite->language;
@@ -95,25 +99,7 @@ class Renderer extends Component
             'default' => $language,
 
             'translations' => [
-                $language => [
-                    'consentModal' =>  [
-                        'label' => $this->_contentService->get('consentModalLabel', $siteId),
-                        'title' => $this->_contentService->get('consentModalTitle', $siteId),
-                        'description' => $this->_parseConsentModalDescription(),
-                        'acceptAllBtn' => $this->_contentService->get('consentModalAcceptAllButton', $siteId),
-                        'acceptNecessaryBtn' => $this->_contentService->get('consentModalAcceptNecessaryButton', $siteId),
-                        'showPreferencesBtn' => $this->_settings->showPreferencesButton ? $this->_contentService->get('consentModalPreferencesLabel', $siteId) : null,
-                        'footer' => $this->_contentService->get('consentModalFooter', $siteId),
-                    ],
-                    'preferencesModal' => [
-                        'title' => $this->_contentService->get('preferencesModalTitle', $siteId),
-                        'savePreferencesBtn' => $this->_contentService->get('preferencesModalSavePreferencesButton', $siteId),
-                        'acceptAllBtn' => $this->_contentService->get('preferencesModalAcceptAllButton', $siteId),
-                        'acceptNecessaryBtn' => $this->_contentService->get('preferencesModalAcceptNecessaryButton', $siteId),
-                        'closeIconLabel' => $this->_contentService->get('preferencesModalCloseIconLabel', $siteId),
-                        'sections' => $this->_buildPreferencesModalSections(),
-                    ],
-                ],
+                $language => UrlHelper::siteUrl("/ccm-language.json"),
             ],
         ];
 
@@ -126,6 +112,29 @@ class Renderer extends Component
         }
 
         return $data;
+    }
+
+    public function getLanguage(int $siteId): array
+    {
+        return [
+            'consentModal' =>  [
+                'label' => $this->_contentService->get('consentModalLabel', $siteId),
+                'title' => $this->_contentService->get('consentModalTitle', $siteId),
+                'description' => $this->_parseConsentModalDescription(),
+                'acceptAllBtn' => $this->_contentService->get('consentModalAcceptAllButton', $siteId),
+                'acceptNecessaryBtn' => $this->_contentService->get('consentModalAcceptNecessaryButton', $siteId),
+                'showPreferencesBtn' => $this->_settings->showPreferencesButton ? $this->_contentService->get('consentModalPreferencesLabel', $siteId) : null,
+                'footer' => $this->_contentService->get('consentModalFooter', $siteId),
+            ],
+            'preferencesModal' => [
+                'title' => $this->_contentService->get('preferencesModalTitle', $siteId),
+                'savePreferencesBtn' => $this->_contentService->get('preferencesModalSavePreferencesButton', $siteId),
+                'acceptAllBtn' => $this->_contentService->get('preferencesModalAcceptAllButton', $siteId),
+                'acceptNecessaryBtn' => $this->_contentService->get('preferencesModalAcceptNecessaryButton', $siteId),
+                'closeIconLabel' => $this->_contentService->get('preferencesModalCloseIconLabel', $siteId),
+                'sections' => $this->_buildPreferencesModalSections(),
+            ],
+        ];
     }
 
     private function _buildPreferencesModalSections(): array
@@ -171,7 +180,7 @@ class Renderer extends Component
 
         return str_replace(
             '{preferences}',
-            '<button type="button" data-cc="show-preferencesModal">'.$buttonLabel.'</button>',
+            '<button data-cc="show-preferencesModal">'.$buttonLabel.'</button>',
             $text
         );
     }

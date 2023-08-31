@@ -32,6 +32,7 @@ class Plugin extends BasePlugin
         $this->_registerServices();
         $this->_registerCpSection();
         $this->_registerCpRoutes();
+        $this->_registerSiteRoutes();
         $this->_registerTranslations();
         $this->_registerSiteEvents();
     }
