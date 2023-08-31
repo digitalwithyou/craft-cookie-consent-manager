@@ -19,7 +19,7 @@
 {% endset %}
 
 {% block content %}
-    {{ actionInput('cookie-consent-manager/categories/save') }}
+    {{ actionInput('cookie-consent-manager/cp/categories/save') }}
     {{ redirectInput('cookie-consent-manager/categories/') }}
 
     {{ forms.hidden({
@@ -42,6 +42,16 @@
             autofocus: true,
             required: true,
             translatable: craft.app.isMultiSite,
+        }) }}
+
+        {{ forms.textField({
+            label: "Handle"|t('app'),
+            instructions: "Unique handle used by developers."|t('cookie-consent-manager'),
+            id: 'handle',
+            name: 'handle',
+            value: category.handle,
+            required: true,
+            errors: category.getErrors('handle'),
         }) }}
 
         {{ forms.textField({

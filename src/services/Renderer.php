@@ -81,7 +81,7 @@ class Renderer extends Component
         $data = [];
 
         foreach ($enabledCategories as $category) {
-            $data[$category->uid] = [
+            $data[$category->handle] = [
                 'enabled' => $category->default,
                 'readOnly' => $category->required,
             ];
@@ -156,7 +156,7 @@ class Renderer extends Component
             $blocks[] = [
                 'title' => $category->name,
                 'description' => $category->description,
-                'linkedCategory' => $category->uid,
+                'linkedCategory' => $category->handle,
             ];
         }
 

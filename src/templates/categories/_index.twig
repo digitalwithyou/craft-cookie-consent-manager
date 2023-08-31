@@ -27,6 +27,7 @@
     {% set tableData = tableData|merge([{
         id: category.id,
         title: category.name,
+        handle: category.handle,
         url: cpUrl('cookie-consent-manager/categories/'~category.id),
         status: category.enabled,
     }]) %}

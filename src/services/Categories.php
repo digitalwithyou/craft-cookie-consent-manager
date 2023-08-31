@@ -111,6 +111,7 @@ class Categories
             ? new CategoryRecord()
             : CategoryRecord::findOne($params['id']);
 
+        $categoryRecord->handle = $params['handle'];
         $categoryRecord->required = !empty($params['required']);
         $categoryRecord->default = !empty($params['default']);
 

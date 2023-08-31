@@ -47,6 +47,7 @@ class Install extends Migration
             'categoryId' => $this->integer()->notNull(),
             'siteId' => $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
+            'handle' => $this->string()->notNull(),
             'enabled' => $this->boolean()->notNull()->defaultValue(true),
             'description' => $this->text(),
             'sortOrder' => $this->integer(),
@@ -94,6 +95,7 @@ class Install extends Migration
             [
                 'id' => 1,
                 'name' => 'Essential',
+                'handle' => 'essential',
                 'enabled' => true,
                 'description' => '',
                 'required' => true,
@@ -103,6 +105,7 @@ class Install extends Migration
             [
                 'id' => 2,
                 'name' => 'Analytical',
+                'handle' => 'analytical',
                 'enabled' => false,
                 'description' => '',
                 'required' => false,
@@ -112,6 +115,7 @@ class Install extends Migration
             [
                 'id' => 3,
                 'name' => 'Marketing',
+                'handle' => 'marketing',
                 'enabled' => false,
                 'description' => '',
                 'required' => false,
@@ -123,6 +127,7 @@ class Install extends Migration
         foreach($categories as $category) {
             $this->insert(CategoryRecord::tableName(), [
                 'id' => $category['id'],
+                'handle' => $category['handle'],
                 'required' => $category['required'],
                 'default' => $category['default'],
             ]);

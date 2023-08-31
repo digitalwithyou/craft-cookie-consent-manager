@@ -11,6 +11,7 @@ class Category extends Model
     public ?int $id = null;
     public ?int $siteId = null;
     public ?string $name = null;
+    public ?string $handle = null;
     public ?string $description = null;
     public bool $enabled = true;
     public bool $required = false;
@@ -32,7 +33,8 @@ class Category extends Model
     protected function defineRules(): array
     {
         return [
-            [['siteId', 'name', 'uid'], 'required'],
+            [['siteId', 'name', 'handle', 'uid'], 'required'],
+            ['handle', 'unique'],
             [['dateUpdated', 'dateCreated'], DateTimeValidator::class],
         ];
     }
