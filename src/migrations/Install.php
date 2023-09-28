@@ -35,6 +35,7 @@ class Install extends Migration
     {
         $this->createTable(CategoryRecord::tableName(), [
             'id' => $this->primaryKey(),
+            'handle' => $this->string()->notNull(),
             'required' => $this->boolean()->notNull()->defaultValue(false),
             'default' => $this->boolean()->notNull()->defaultValue(false),
             'dateDeleted' => $this->dateTime(),
