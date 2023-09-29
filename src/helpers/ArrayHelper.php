@@ -2,9 +2,8 @@
 
 namespace dwy\CookieConsentManager\helpers;
 
-use craft\helpers\ArrayHelper as CraftArrayHelper;
 
-class ArrayHelper extends CraftArrayHelper
+class ArrayHelper
 {
     /**
      * Array filter recursive
