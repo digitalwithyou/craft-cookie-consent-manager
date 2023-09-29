@@ -12,24 +12,22 @@ class ArrayHelper extends CraftArrayHelper
      * @param array $input
      * @return array
      */
-    public static function filter(array $input): array
+    public static function filter(array $array): array
     {
-        $output = [];
-
-        foreach ($input as $key => $value) {
+        foreach ($array as $key => &$value) {
             if (is_array($value)) {
-                $output[$key] = self::filter($value);
-
-                if (empty($output[$key])) {
-                    unset($output[$key]);
-                }
+                $value = self::filter($value);
 
                 continue;
             }
 
-            $output[$key] = array_filter($value);
+            if (is_null($value) || $value === '') {
+                unset($array[$key]);
+            }
         }
 
-        return $output;
+        unset($value);
+
+        return $array;
     }
 }
