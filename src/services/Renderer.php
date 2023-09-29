@@ -8,7 +8,7 @@ use craft\helpers\UrlHelper;
 use craft\helpers\Template;
 use craft\models\Site;
 use craft\web\View;
-use dwy\CookieConsentManager\helpers\I18N as I18NHelper;
+use dwy\CookieConsentManager\helpers\ArrayHelper;
 use dwy\CookieConsentManager\models\Settings;
 use dwy\CookieConsentManager\Plugin;
 use dwy\CookieConsentManager\services\Content;
@@ -30,6 +30,7 @@ class Renderer extends Component
     public function renderConfig(): void
     {
         $config = [
+            'root' => $this->_settings->root,
             'mode' => $this->_settings->mode,
             'autoShow' => $this->_settings->autoShow,
             'manageScriptTags' => $this->_settings->manageScriptTags,
@@ -66,10 +67,7 @@ class Renderer extends Component
             ],
         ];
 
-        if ($this->_settings->root) {
-            $config['root'] = $this->_settings->root;
-        }
-
+        $config = ArrayHelper::filter($config);
         $config = Json::encode($config);
 
         Craft::$app->getView()->registerJs("CookieConsent.run({$config});", View::POS_END);
