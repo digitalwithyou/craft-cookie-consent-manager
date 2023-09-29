@@ -48,7 +48,6 @@ class Install extends Migration
             'categoryId' => $this->integer()->notNull(),
             'siteId' => $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
-            'handle' => $this->string()->notNull(),
             'enabled' => $this->boolean()->notNull()->defaultValue(true),
             'description' => $this->text(),
             'sortOrder' => $this->integer(),
