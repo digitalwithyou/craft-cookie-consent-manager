@@ -11,12 +11,12 @@ module.exports = getConfig({
                 patterns: [
                     {
                         from: require.resolve(
-                            'vanilla-cookieconsent/dist/cookieconsent.umd.js'
+                            'vanilla-cookieconsent/dist/cookieconsent.umd.js',
                         ),
                     },
                     {
                         from: require.resolve(
-                            'vanilla-cookieconsent/dist/cookieconsent.css'
+                            'vanilla-cookieconsent/dist/cookieconsent.css',
                         ),
                     },
                 ],

@@ -10,8 +10,8 @@
     "fix-prettier": "prettier --write ."
   },
   "devDependencies": {
-    "@craftcms/webpack": "^1.1.0",
-    "prettier": "^2.8.4",
-    "vanilla-cookieconsent": "github:orestbida/cookieconsent#v3.0-beta"
+    "@craftcms/webpack": "^1.1.2",
+    "prettier": "^3.2.5",
+    "vanilla-cookieconsent": "^3.0.0"
   }
 }
