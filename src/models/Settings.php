@@ -51,6 +51,14 @@ class Settings extends Model
 
 
     /**
+     * Google Tag Manager
+     */
+
+    // Google Tag Manager ID
+    public string $gtmId = '';
+
+
+    /**
      * Cookie
      */
 

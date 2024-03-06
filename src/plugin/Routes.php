@@ -22,6 +22,7 @@ trait Routes
             $event->rules['cookie-consent-manager/content/preferences'] = 'cookie-consent-manager/cp/content/preferences';
 
             $event->rules['cookie-consent-manager/settings'] = 'cookie-consent-manager/cp/settings/index';
+            $event->rules['cookie-consent-manager/settings/gtm'] = 'cookie-consent-manager/cp/settings/gtm';
             $event->rules['cookie-consent-manager/settings/layout'] = 'cookie-consent-manager/cp/settings/layout';
             $event->rules['cookie-consent-manager/settings/developer'] = 'cookie-consent-manager/cp/settings/developer';
             $event->rules['cookie-consent-manager/settings/plugin'] = 'cookie-consent-manager/cp/settings/plugin';

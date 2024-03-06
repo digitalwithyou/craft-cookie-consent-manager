@@ -25,6 +25,15 @@ class SettingsController extends BaseCpController
         ));
     }
 
+    public function actionGtm(): Response
+    {
+        $settings = Plugin::getInstance()->getSettings();
+
+        return $this->renderTemplate('cookie-consent-manager/settings/_gtm', compact(
+            'settings',
+        ));
+    }
+
     public function actionLayout(): Response
     {
         $settings = Plugin::getInstance()->getSettings();

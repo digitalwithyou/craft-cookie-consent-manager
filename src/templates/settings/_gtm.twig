@@ -1,0 +1,28 @@
+{% extends 'cookie-consent-manager/_layouts/settings' %}
+
+{% import "_includes/forms" as forms %}
+
+{% set selectedNavItem = 'gtm' %}
+
+{% block content %}
+
+    <form method="post" accept-charset="UTF-8" data-saveshortcut data-confirm-unload>
+        {{ actionInput('cookie-consent-manager/cp/settings/save') }}
+        {{ csrfInput() }}
+
+        {{ forms.textField({
+            first: true,
+            label: 'Google Tag Manager ID'|t('cookie-consent-manager'),
+            instructions: 'Find it in your Google Tag Manager account under Admin. It\'s typically in the format GTM-XXXXXX. Helps us integrate tracking and analytics.'|t('cookie-consent-manager'),
+            name: 'gtmId',
+            value: settings.gtmId,
+            size: 20,
+        }) }}
+
+        <div class="buttons">
+            {{ forms.submitButton({label: 'Save'|t('app')}) }}
+        </div>
+
+    </form>
+
+{% endblock %}
