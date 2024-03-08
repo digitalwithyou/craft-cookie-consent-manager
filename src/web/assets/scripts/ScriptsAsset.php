@@ -53,7 +53,7 @@ function consentChanged(event) {
     });
 }
 
-window.addEventListener('cc:onFirstConsent', consentChanged);
+window.addEventListener('cc:onConsent', consentChanged);
 window.addEventListener('cc:onChange', consentChanged);
 
 EOD;
