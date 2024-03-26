@@ -42,9 +42,9 @@ var columns = [
 new Craft.VueAdminTable({
     columns: columns,
     container: '#categories-vue-admin-table',
-    deleteAction: 'cookie-consent-manager/categories/archive',
+    deleteAction: 'cookie-consent-manager/cp/categories/archive',
     deleteConfirmationMessage: Craft.t('cookie-consent-manager', 'Are you sure you want to archive the “{name}” category?'),
-    reorderAction: 'cookie-consent-manager/categories/reorder',
+    reorderAction: 'cookie-consent-manager/cp/categories/reorder',
     reorderSuccessMessage: Craft.t('cookie-consent-manager', 'Categories reordered.'),
     reorderFailMessage:    Craft.t('cookie-consent-manager', 'Couldn’t reorder Categories.'),
     tableData: {{ tableData|json_encode|raw }}
